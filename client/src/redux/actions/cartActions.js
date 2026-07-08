@@ -1,7 +1,7 @@
 import axios from "axios";
 import * as actionTypes from "../constants/cartConstants";
 
-const URL = "http://localhost:3000";
+const URL = import.meta.env.VITE_API_URL;
 
 export const addToCart = (id, quantity) => async (dispatch) => {
     try {

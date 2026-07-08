@@ -2,7 +2,7 @@
 import axios from 'axios';
 import * as actionTypes from '../constants/productConstants'
 
-const URL = 'http://localhost:3000';
+const URL = import.meta.env.VITE_API_URL;
 export const getProducts = () => async(dispatch) =>{
     try {
          const {data} = await axios.get(`${URL}/products`);
