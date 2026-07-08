@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL = "http://localhost:3000";
+const URL = import.meta.env.VITE_API_URL;
 
 export const authenticateSignup = async (data) => {
   try {
@@ -19,7 +19,7 @@ export const authenticateSignup = async (data) => {
 
 export const authenticateLogin = async (data) => {
   try {
-    return await axios.post("http://localhost:3000/login", data);
+    return await axios.post(`${URL}/login`, data);
   } catch (error) {
     return error.response;
   }
@@ -28,7 +28,7 @@ export const authenticateLogin = async (data) => {
 
 export const createCheckoutSession = async (amount) => {
     const response = await axios.post(
-        "http://localhost:3000/create-checkout-session",
+        `${URL}/create-checkout-session`,
         {
             amount,
         }
