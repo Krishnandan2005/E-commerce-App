@@ -9,7 +9,6 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useContext, useState } from "react";
 
-
 import { DataContext } from "../../context/DataProvider";
 import LoginDialog from "../Login/LoginDialog";
 import Profile from "./Profile";
@@ -33,15 +32,15 @@ const Wrapper = styled(Box, {
 }));
 
 const LoginButton = styled(Button)({
-  color: "#2874f0",
-  background: "#fff",
+  color: "#1E293B",
+  background: "#FFE500",
   textTransform: "none",
-  fontWeight: 600,
+  fontWeight: 700,
   padding: "4px 32px",
   boxShadow: "none",
 
   "&:hover": {
-    background: "#fff",
+    background: "#FFD700",
     boxShadow: "none",
   },
 });
@@ -75,7 +74,7 @@ const IconContainer = styled(Box, {
 const CustomButtons = ({ isDrawer = false }) => {
   const [open, setOpen] = useState(false);
   const { account, setAccount } = useContext(DataContext);
-  const {cartItems} = useSelector(state => state.cart);
+  const { cartItems } = useSelector((state) => state.cart);
 
   return (
     <>
@@ -88,25 +87,18 @@ const CustomButtons = ({ isDrawer = false }) => {
           </LoginButton>
         )}
 
-        <NavText isDrawer={isDrawer}>
-          Become a Seller
-        </NavText>
+        <NavText isDrawer={isDrawer}>Become a Seller</NavText>
 
         <IconContainer isDrawer={isDrawer}>
-          <ExpandMoreIcon
-            sx={{ color: isDrawer ? "#000" : "#fff" }}
-          />
-          <NavText isDrawer={isDrawer}>
-            More
-          </NavText>
+          <ExpandMoreIcon sx={{ color: isDrawer ? "#000" : "#fff" }} />
+          <NavText isDrawer={isDrawer}>More</NavText>
         </IconContainer>
 
         <IconContainer isDrawer={isDrawer}>
           <Badge badgeContent={cartItems?.length} color="secondary">
-          <ShoppingCartIcon 
-            sx={{ color: isDrawer ? "#000" : "#fff" }}
-          /> </Badge>
-          <NavText isDrawer={isDrawer} style={{marginLeft : 10}}>
+            <ShoppingCartIcon sx={{ color: isDrawer ? "#000" : "#fff" }} />
+          </Badge>
+          <NavText isDrawer={isDrawer} style={{ marginLeft: 10 }}>
             Cart
           </NavText>
         </IconContainer>

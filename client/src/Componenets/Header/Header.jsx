@@ -15,9 +15,10 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useState } from "react";
 
 const StyledHeader = styled(AppBar)`
-  background: #2874f0;
+  background: linear-gradient(90deg, #1e293b 0%, #334155 100%);
   height: 55px;
   box-shadow: none;
+  border-bottom: 3px solid #ffe500;
 `;
 
 const StyledToolbar = styled(Toolbar)`
@@ -48,10 +49,11 @@ const LogoIconWrapper = styled(Box)`
   height: 32px;
   border-radius: 8px;
   background: #ffe500;
+  box-shadow: 0 2px 8px rgba(255, 229, 0, 0.4);
 `;
 
 const StyledCartIcon = styled(ShoppingCartIcon)`
-  color: #2874f0;
+  color: #1e293b;
   font-size: 20px;
 `;
 
@@ -69,6 +71,7 @@ const LogoText = styled(Typography)`
   letter-spacing: 0.3px;
   line-height: 1;
   white-space: nowrap;
+  color: #ffffff;
 
   & span {
     color: #ffe500;
@@ -136,7 +139,7 @@ const Header = () => {
           </LogoIconWrapper>
 
           <LogoTextWrapper>
-            <LogoText sx={{ color: "#ffffff" }}>
+            <LogoText>
               Quick<span>Cart</span>247
             </LogoText>
 
