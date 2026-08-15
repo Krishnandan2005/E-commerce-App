@@ -41,11 +41,12 @@ const LogoContainer = styled(Link)(({ theme }) => ({
 }));
 
 const LogoText = styled(Typography)`
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   font-style: italic;
   color: #ffffff;
   line-height: 1;
+  white-space: nowrap;
 `;
 
 const SubHeading = styled(Typography)`
@@ -103,7 +104,7 @@ const Header = () => {
         </Drawer>
 
         <LogoContainer to="/">
-          <LogoText>ShopKart</LogoText>
+          <LogoText>QuickCart247</LogoText>
 
           <SubHeading>
             Explore
