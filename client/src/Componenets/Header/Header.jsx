@@ -40,8 +40,12 @@ const LogoContainer = styled(Link)(({ theme }) => ({
   },
 }));
 
-const Logo = styled("img")`
-  width: 75px;
+const LogoText = styled(Typography)`
+  font-size: 22px;
+  font-weight: 700;
+  font-style: italic;
+  color: #ffffff;
+  line-height: 1;
 `;
 
 const SubHeading = styled(Typography)`
@@ -50,19 +54,13 @@ const SubHeading = styled(Typography)`
   font-size: 12px;
   font-style: italic;
   color: #ffffff;
-  margin-top: -2px;
+  margin-top: 2px;
 `;
 
 const PlusText = styled("span")`
   color: #ffe500;
   font-weight: 500;
   margin-left: 2px;
-`;
-
-const PlusImage = styled("img")`
-  width: 10px;
-  height: 10px;
-  margin-left: 3px;
 `;
 
 const CustomButtonWrapper = styled(Box)(({ theme }) => ({
@@ -88,12 +86,6 @@ const DrawerWrapper = styled(Box)`
   padding: 20px 10px;
 `;
 
-const logoURL =
-  "https://static-assets-web.flixcart.com/www/linchpin/fk-cp-zion/img/flipkart-plus_8d85f4.png";
-
-const subURL =
-  "https://static-assets-web.flixcart.com/www/linchpin/fk-cp-zion/img/plus_aef861.png";
-
 const Header = () => {
   const [open, setOpen] = useState(false);
 
@@ -104,23 +96,18 @@ const Header = () => {
           <MenuIcon />
         </MenuButton>
 
-        <Drawer
-          anchor="left"
-          open={open}
-          onClose={() => setOpen(false)}
-        >
+        <Drawer anchor="left" open={open} onClose={() => setOpen(false)}>
           <DrawerWrapper>
             <CustomButtons isDrawer />
           </DrawerWrapper>
         </Drawer>
 
         <LogoContainer to="/">
-          <Logo src={logoURL} alt="Flipkart" />
+          <LogoText>ShopKart</LogoText>
 
           <SubHeading>
             Explore
             <PlusText>&nbsp;Plus</PlusText>
-            <PlusImage src={subURL} alt="Plus" />
           </SubHeading>
         </LogoContainer>
 
