@@ -11,6 +11,7 @@ import Search from "./Search";
 import CustomButtons from "./CustomButtons";
 import { Link } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { useState } from "react";
 
 const StyledHeader = styled(AppBar)`
@@ -28,34 +29,60 @@ const StyledToolbar = styled(Toolbar)`
 
 const LogoContainer = styled(Link)(({ theme }) => ({
   display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
+  alignItems: "center",
   marginLeft: "12%",
   marginRight: "8px",
-  lineHeight: 0,
   textDecoration: "none",
+  gap: "8px",
 
   [theme.breakpoints.down("md")]: {
     marginLeft: 0,
   },
 }));
 
-const LogoText = styled(Typography)`
+const LogoIconWrapper = styled(Box)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #ffe500;
+`;
+
+const StyledCartIcon = styled(ShoppingCartIcon)`
+  color: #2874f0;
   font-size: 20px;
-  font-weight: 700;
+`;
+
+const LogoTextWrapper = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 1;
+`;
+
+const LogoText = styled(Typography)`
+  font-size: 19px;
+  font-weight: 800;
   font-style: italic;
-  color: #ffffff;
+  letter-spacing: 0.3px;
   line-height: 1;
   white-space: nowrap;
+
+  & span {
+    color: #ffe500;
+  }
 `;
 
 const SubHeading = styled(Typography)`
   display: flex;
   align-items: center;
-  font-size: 12px;
+  font-size: 11px;
   font-style: italic;
   color: #ffffff;
-  margin-top: 2px;
+  margin-top: 3px;
+  opacity: 0.9;
 `;
 
 const PlusText = styled("span")`
@@ -104,12 +131,20 @@ const Header = () => {
         </Drawer>
 
         <LogoContainer to="/">
-          <LogoText>QuickCart247</LogoText>
+          <LogoIconWrapper>
+            <StyledCartIcon />
+          </LogoIconWrapper>
 
-          <SubHeading>
-            Explore
-            <PlusText>&nbsp;Plus</PlusText>
-          </SubHeading>
+          <LogoTextWrapper>
+            <LogoText sx={{ color: "#ffffff" }}>
+              Quick<span>Cart</span>247
+            </LogoText>
+
+            <SubHeading>
+              Shop Smart
+              <PlusText>&nbsp;• Anytime</PlusText>
+            </SubHeading>
+          </LogoTextWrapper>
         </LogoContainer>
 
         <Search />
