@@ -3,11 +3,9 @@ import CarouselModule from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import Countdown from "react-countdown";
 import { Link } from "react-router-dom";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 const Carousel = CarouselModule.default;
-
-const timerURL =
-  "https://static-assets-web.flixcart.com/www/linchpin/fk-cp-zion/img/timer_a73398.svg";
 
 const responsive = {
   desktop: {
@@ -27,6 +25,8 @@ const responsive = {
 const Component = styled(Box)`
   margin-top: 5px;
   background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
 `;
 
 const Deal = styled(Box)`
@@ -45,16 +45,27 @@ const Timer = styled(Box)`
 
 const ViewAllButton = styled(Button)`
   margin-left: auto;
-  background: #2874f0;
-  border-radius: 2px;
+  background: #1e293b;
+  border-radius: 6px;
   font-weight: 600;
   font-size: 14px;
   text-transform: none;
+  box-shadow: none;
+
+  &:hover {
+    background: #334155;
+    box-shadow: none;
+  }
 `;
 
 const ProductBox = styled(Box)`
   padding: 25px 15px;
   text-align: center;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
 `;
 
 const Image = styled("img")({
@@ -90,21 +101,12 @@ const Slide = ({ products = [], title, timer }) => {
 
         {timer && (
           <Timer>
-            <img
-              src={timerURL}
-              alt="timer"
-              style={{ width: 24, marginRight: 5 }}
-            />
-            <Countdown
-              date={Date.now() + 5.04e7}
-              renderer={renderer}
-            />
+            <AccessTimeIcon sx={{ fontSize: 20, marginRight: "5px", color: "#1E293B" }} />
+            <Countdown date={Date.now() + 5.04e7} renderer={renderer} />
           </Timer>
         )}
 
-        <ViewAllButton variant="contained">
-          View All
-        </ViewAllButton>
+        <ViewAllButton variant="contained">View All</ViewAllButton>
       </Deal>
 
       <Divider />
@@ -135,17 +137,11 @@ const Slide = ({ products = [], title, timer }) => {
                 alt={product.title?.shortTitle || "product"}
               />
 
-              <Text style={{ fontWeight: 600 }}>
-                {product.title?.shortTitle}
-              </Text>
+              <Text style={{ fontWeight: 600 }}>{product.title?.shortTitle}</Text>
 
-              <Text style={{ color: "green" }}>
-                {product.discount}
-              </Text>
+              <Text style={{ color: "#0F766E" }}>{product.discount}</Text>
 
-              <Text style={{ color: "#212121", opacity: 0.6 }}>
-                {product.tagline}
-              </Text>
+              <Text style={{ color: "#212121", opacity: 0.6 }}>{product.tagline}</Text>
             </ProductBox>
           </Link>
         ))}
