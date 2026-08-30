@@ -10,7 +10,10 @@ import {
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 import { DataContext } from "../../context/DataProvider";
-import { authenticateSignup, authenticateLogin } from "../../service/api";
+import {
+  authenticateSignup,
+  authenticateLogin,
+} from "../../service/api";
 
 const Component = styled(Box)`
   width: 460px;
@@ -57,9 +60,9 @@ const TabButton = styled(Box, {
   fontWeight: 600,
   fontSize: 14,
   cursor: "pointer",
-  color: active ? "#ffffff" : "#94A3B8",
+  color: active ? "#ffffff" : "#94a3b8",
   background: active
-    ? "linear-gradient(135deg, #4C3FE0 0%, #7C3AED 100%)"
+    ? "linear-gradient(135deg, #4c3fe0 0%, #7c3aed 100%)"
     : "transparent",
   boxShadow: active
     ? "0 4px 10px rgba(76, 63, 224, 0.3)"
@@ -176,9 +179,13 @@ const loginInitialValues = {
 function LoginDialog({ open, setOpen, onSuccess }) {
   const [view, setView] = useState("login");
 
-  const [signup, setSignup] = useState(signupInitialValues);
+  const [signup, setSignup] = useState(
+    signupInitialValues
+  );
 
-  const [login, setLogin] = useState(loginInitialValues);
+  const [login, setLogin] = useState(
+    loginInitialValues
+  );
 
   const [error, setError] = useState("");
 
@@ -236,13 +243,30 @@ function LoginDialog({ open, setOpen, onSuccess }) {
         return;
       }
 
-      // Set logged-in account
-      setAccount(signup.firstname);
+      /*
+       * Store complete user object.
+       * This gives us access to:
+       * _id
+       * firstname
+       * lastname
+       * username
+       * email
+       * phone
+       */
+      const user = response.data?.data;
 
-      // Close login dialog
+      if (user) {
+        setAccount(user);
+      } else {
+        // Fallback in case backend response is different
+        setAccount({
+          ...signup,
+        });
+      }
+
       handleClose();
 
-      // Continue the action that opened the login dialog
+      // Continue pending action
       if (onSuccess) {
         onSuccess();
       }
@@ -264,20 +288,29 @@ function LoginDialog({ open, setOpen, onSuccess }) {
 
       const response = await authenticateLogin(login);
 
-      if (response.status === 200) {
-        // Set logged-in account
-        setAccount(response.data.data.firstname);
+      if (response?.status === 200) {
+        /*
+         * IMPORTANT:
+         * Store the COMPLETE user object instead of
+         * only firstname.
+         *
+         * We need _id for Order History.
+         */
+        const user = response.data?.data;
 
-        // Close login dialog
+        if (user) {
+          setAccount(user);
+        }
+
         handleClose();
 
-        // Continue the pending action
+        // Continue pending action
         if (onSuccess) {
           onSuccess();
         }
       } else {
         setError(
-          response.data.message ||
+          response?.data?.message ||
             "Invalid username or password"
         );
       }
@@ -338,7 +371,6 @@ function LoginDialog({ open, setOpen, onSuccess }) {
         ====================================================== */}
 
         <TabSwitch>
-
           <TabButton
             active={view === "login"}
             onClick={() => {
@@ -358,7 +390,6 @@ function LoginDialog({ open, setOpen, onSuccess }) {
           >
             Sign up
           </TabButton>
-
         </TabSwitch>
 
         {/* ======================================================
@@ -366,13 +397,11 @@ function LoginDialog({ open, setOpen, onSuccess }) {
         ====================================================== */}
 
         {view === "login" ? (
-
           <Box
             display="flex"
             flexDirection="column"
             gap="18px"
           >
-
             <StyledField
               fullWidth
               size="small"
@@ -428,9 +457,7 @@ function LoginDialog({ open, setOpen, onSuccess }) {
               By continuing, you agree to QuickCart247's
               Terms of Use and Privacy Policy.
             </Terms>
-
           </Box>
-
         ) : (
 
           /* ======================================================
@@ -443,9 +470,7 @@ function LoginDialog({ open, setOpen, onSuccess }) {
             gap="18px"
             autoComplete="off"
           >
-
             <FieldRow>
-
               <StyledField
                 fullWidth
                 size="small"
@@ -465,7 +490,6 @@ function LoginDialog({ open, setOpen, onSuccess }) {
                 value={signup.lastname}
                 onChange={onInputChange}
               />
-
             </FieldRow>
 
             <StyledField
@@ -529,7 +553,6 @@ function LoginDialog({ open, setOpen, onSuccess }) {
             >
               Create account
             </PrimaryButton>
-
           </Box>
         )}
 

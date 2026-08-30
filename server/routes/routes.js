@@ -24,6 +24,12 @@ import {
   sellerLogin,
 } from "../controllers/seller.controller.js";
 
+import {
+  createOrder,
+  getUserOrders,
+  getOrderById,
+} from "../controllers/order.controller.js";
+
 const router = express.Router();
 
 // ======================================================
@@ -90,5 +96,15 @@ router.delete(
   "/seller/products/:id",
   deleteSellerProduct
 );
+
+// ======================================================
+// ORDERS
+// ======================================================
+
+router.post("/orders", createOrder);
+
+router.get("/orders/:userId", getUserOrders);
+
+router.get("/order/:id", getOrderById);
 
 export default router;
