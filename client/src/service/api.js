@@ -42,13 +42,17 @@ export const createCheckoutSession = async (amount) => {
     const response = await axios.post(
       `${URL}/create-checkout-session`,
       {
-        amount,
+        amount: Number(amount),
       }
     );
 
     return response.data;
   } catch (error) {
-    console.error("Checkout API Error:", error);
+    console.error(
+      "Checkout API Error:",
+      error.response?.data || error.message
+    );
+
     throw error;
   }
 };
