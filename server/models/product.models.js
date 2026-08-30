@@ -8,26 +8,69 @@ const productSchema = new mongoose.Schema(
       unique: true,
     },
 
-    url: String,
-    detailUrl: String,
+    sellerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Seller",
+      required: false,
+    },
+
+    url: {
+      type: String,
+    },
+
+    detailUrl: {
+      type: String,
+    },
 
     title: {
-      shortTitle: String,
-      longTitle: String,
+      shortTitle: {
+        type: String,
+      },
+
+      longTitle: {
+        type: String,
+      },
+    },
+
+    category: {
+      type: String,
+      required: true,
+      trim: true,
     },
 
     price: {
-      mrp: Number,
-      cost: Number,
-      discount: String,
+      mrp: {
+        type: Number,
+      },
+
+      cost: {
+        type: Number,
+      },
+
+      discount: {
+        type: String,
+      },
     },
 
-    quantity: Number,
-    description: String,
-    discount: String,
-    tagline: String,
+    quantity: {
+      type: Number,
+    },
+
+    description: {
+      type: String,
+    },
+
+    discount: {
+      type: String,
+    },
+
+    tagline: {
+      type: String,
+    },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
 const Product = mongoose.model("Product", productSchema);

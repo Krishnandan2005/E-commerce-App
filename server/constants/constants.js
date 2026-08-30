@@ -1,278 +1,536 @@
 export const products = [
   {
     id: "product1",
+    category: "Home",
     url: "https://images.unsplash.com/photo-1556910096-6f5e72db6803?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     detailUrl: "https://images.unsplash.com/photo-1556910096-6f5e72db6803?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: { shortTitle: "Home & Kitchen", longTitle: "Pigeon FAVOURITE Electric Kettle (1.5 L, Silver, Black)" },
-    price: { mrp: 1995, cost: 1125, discount: "47%" },
+    title: {
+      shortTitle: "Home & Kitchen",
+      longTitle: "Pigeon FAVOURITE Electric Kettle (1.5 L, Silver, Black)",
+    },
+    price: {
+      mrp: 1995,
+      cost: 1125,
+      discount: "47%",
+    },
     quantity: 1,
-    description: "This electric kettle from Pigeon will soon become a travelers best friend, a hostelite saviour and an answer to all the midnight cravings.",
+    description:
+      "This electric kettle from Pigeon will soon become a travelers best friend, a hostelite saviour and an answer to all the midnight cravings.",
     discount: "Extra 10% Off",
     tagline: "Deal of the day",
   },
+
   {
     id: "product2",
+    category: "Appliances",
     url: "https://plus.unsplash.com/premium_photo-1717879201895-62c104c106a6?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     detailUrl: "https://plus.unsplash.com/premium_photo-1717879201895-62c104c106a6?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: { shortTitle: "Sandwich Makers", longTitle: "QuickCart247 Essentials Sandwich Grill (Black)" },
-    price: { mrp: 1499, cost: 899, discount: "40%" },
+    title: {
+      shortTitle: "Sandwich Makers",
+      longTitle: "QuickCart247 Essentials Sandwich Grill (Black)",
+    },
+    price: {
+      mrp: 1499,
+      cost: 899,
+      discount: "40%",
+    },
     quantity: 1,
-    description: "This non-stick sandwich toaster is easy to use and very handy, great for tasty toasts and toasted sandwiches.",
+    description:
+      "This non-stick sandwich toaster is easy to use and very handy, great for tasty toasts and toasted sandwiches.",
     discount: "From 99+5% Off",
     tagline: "Pestige, Nova & more",
   },
+
   {
     id: "product3",
+    category: "Top Offers",
     url: "https://images.unsplash.com/photo-1585475686930-8fcb2728eb6b?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     detailUrl: "https://images.unsplash.com/photo-1585475686930-8fcb2728eb6b?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: { shortTitle: "Fitness Gear", longTitle: "AJRO DEAL New Adjustable Single Resistance Tube (Multicolor)" },
-    price: { mrp: 499, cost: 166, discount: "66%" },
+    title: {
+      shortTitle: "Fitness Gear",
+      longTitle: "AJRO DEAL New Adjustable Single Resistance Tube (Multicolor)",
+    },
+    price: {
+      mrp: 499,
+      cost: 166,
+      discount: "66%",
+    },
     quantity: 1,
-    description: "This unique product can tone your back muscles, reduce belly fat, and improve blood circulation.",
+    description:
+      "This unique product can tone your back muscles, reduce belly fat, and improve blood circulation.",
     discount: "Upto 70% Off",
     tagline: "Deal of the Day",
   },
+
   {
     id: "product4",
+    category: "Mobile",
     url: "https://images.unsplash.com/photo-1637160151663-a410315e4e75?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     detailUrl: "https://images.unsplash.com/photo-1637160151663-a410315e4e75?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: { shortTitle: "Smart Watches", longTitle: "Molife Sense 500 Smartwatch (Black Strap, Freesize)" },
-    price: { mrp: 6999, cost: 4049, discount: "42%" },
+    title: {
+      shortTitle: "Smart Watches",
+      longTitle: "Molife Sense 500 Smartwatch (Black Strap, Freesize)",
+    },
+    price: {
+      mrp: 6999,
+      cost: 4049,
+      discount: "42%",
+    },
     quantity: 1,
-    description: "A brilliant smartwatch with a large infinity display and seamless Bluetooth 5.0 connectivity.",
+    description:
+      "A brilliant smartwatch with a large infinity display and seamless Bluetooth 5.0 connectivity.",
     discount: "Grab Now",
     tagline: "Best Seller",
   },
+
   {
     id: "product5",
+    category: "Beauty",
     url: "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?q=80&w=1311&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     detailUrl: "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?q=80&w=1311&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: { shortTitle: "Hair Dryers & more", longTitle: "Nova Professional NHP 8220 Hair Dryer (1800 W, Multicolor)" },
-    price: { mrp: 1899, cost: 1124, discount: "40%" },
+    title: {
+      shortTitle: "Hair Dryers & more",
+      longTitle: "Nova Professional NHP 8220 Hair Dryer (1800 W, Multicolor)",
+    },
+    price: {
+      mrp: 1899,
+      cost: 1124,
+      discount: "40%",
+    },
     quantity: 1,
     description: "",
     discount: "From ₹499",
     tagline: "Kubra, Nova & more",
   },
+
   {
     id: "product6",
+    category: "Appliances",
     url: "https://images.unsplash.com/photo-1665298455913-dd43714f5ad1?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     detailUrl: "https://images.unsplash.com/photo-1665298455913-dd43714f5ad1?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: { shortTitle: "Table Fans", longTitle: "Portable 300 mm Ultra High Speed 3 Blade Table Fan (Black, Pack of 1)" },
-    price: { mrp: 2250, cost: 1199, discount: "46%" },
+    title: {
+      shortTitle: "Table Fans",
+      longTitle: "Portable 300 mm Ultra High Speed 3 Blade Table Fan (Black, Pack of 1)",
+    },
+    price: {
+      mrp: 2250,
+      cost: 1199,
+      discount: "46%",
+    },
     quantity: 1,
-    description: "Perfect size fan for a table, desk, or dorm room. Whisper quiet with powerful, reliable airflow.",
+    description:
+      "Perfect size fan for a table, desk, or dorm room. Whisper quiet with powerful, reliable airflow.",
     discount: "Minimum 40% Off",
     tagline: "Top Selling",
   },
+
   {
     id: "product7",
+    category: "Electronics",
     url: "https://images.unsplash.com/photo-1599669454515-1b2e0173f302?w=400&auto=format&fit=crop",
     detailUrl: "https://images.unsplash.com/photo-1599669454515-1b2e0173f302?w=800&auto=format&fit=crop",
-    title: { shortTitle: "Headphones", longTitle: "boAt Rockerz 235v2 with ASAP Charging Version 5.0 Bluetooth Headset" },
-    price: { mrp: 2990, cost: 1199, discount: "59%" },
+    title: {
+      shortTitle: "Headphones",
+      longTitle: "boAt Rockerz 235v2 with ASAP Charging Version 5.0 Bluetooth Headset",
+    },
+    price: {
+      mrp: 2990,
+      cost: 1199,
+      discount: "59%",
+    },
     quantity: 1,
-    description: "Fast Charging Bluetooth Headset with Call Vibration Alert and Easy Access Controls.",
+    description:
+      "Fast Charging Bluetooth Headset with Call Vibration Alert and Easy Access Controls.",
     discount: "Minimum 50% Off",
     tagline: "Grab Now!",
   },
+
   {
     id: "product8",
+    category: "Fashion",
     url: "https://images.unsplash.com/photo-1594299447935-e5b840f54b9b?w=400&auto=format&fit=crop",
     detailUrl: "https://images.unsplash.com/photo-1594299447935-e5b840f54b9b?w=800&auto=format&fit=crop",
-    title: { shortTitle: "Backpacks", longTitle: "Skybags Ranger Laptop Backpack (30L, Water Resistant, Grey)" },
-    price: { mrp: 2499, cost: 1299, discount: "48%" },
+    title: {
+      shortTitle: "Backpacks",
+      longTitle: "Skybags Ranger Laptop Backpack (30L, Water Resistant, Grey)",
+    },
+    price: {
+      mrp: 2499,
+      cost: 1299,
+      discount: "48%",
+    },
     quantity: 1,
-    description: "A spacious, durable laptop backpack with padded compartments and water-resistant fabric.",
+    description:
+      "A spacious, durable laptop backpack with padded compartments and water-resistant fabric.",
     discount: "Extra 15% Off",
     tagline: "Trending Now",
   },
+
   {
     id: "product9",
+    category: "Fashion",
     url: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     detailUrl: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: { shortTitle: "Sneakers", longTitle: "Campus Storm Running Shoes (Men, Black/White)" },
-    price: { mrp: 1999, cost: 899, discount: "55%" },
+    title: {
+      shortTitle: "Sneakers",
+      longTitle: "Campus Storm Running Shoes (Men, Black/White)",
+    },
+    price: {
+      mrp: 1999,
+      cost: 899,
+      discount: "55%",
+    },
     quantity: 1,
-    description: "Lightweight running shoes with breathable mesh upper and cushioned sole.",
+    description:
+      "Lightweight running shoes with breathable mesh upper and cushioned sole.",
     discount: "Flat 55% Off",
     tagline: "Bestseller",
   },
+
   {
     id: "product10",
+    category: "Mobile",
     url: "https://images.unsplash.com/photo-1561154464-82e9adf32764?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     detailUrl: "https://images.unsplash.com/photo-1561154464-82e9adf32764?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: { shortTitle: "Tablets", longTitle: "Lenovo Tab M10 (4GB RAM, 64GB Storage, WiFi, Grey)" },
-    price: { mrp: 150999, cost: 114499, discount: "28%" },
+    title: {
+      shortTitle: "Tablets",
+      longTitle: "Lenovo Tab M10 (4GB RAM, 64GB Storage, WiFi, Grey)",
+    },
+    price: {
+      mrp: 150999,
+      cost: 114499,
+      discount: "28%",
+    },
     quantity: 1,
-    description: "A reliable everyday tablet with a crisp display and long battery life.",
+    description:
+      "A reliable everyday tablet with a crisp display and long battery life.",
     discount: "Bank Offer 10% Off",
     tagline: "Back to School",
   },
+
   {
     id: "product11",
+    category: "Mobile",
     url: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?q=80&w=627&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    detailUrl:"https://images.unsplash.com/photo-1598327105666-5b89351aff97?q=80&w=627&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: { shortTitle: "Smartphones", longTitle: "Redmi Note 13 (8GB RAM, 128GB Storage, Midnight Black)" },
-    price: { mrp: 18999, cost: 14999, discount: "21%" },
+    detailUrl:
+      "https://images.unsplash.com/photo-1598327105666-5b89351aff97?q=80&w=627&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    title: {
+      shortTitle: "Smartphones",
+      longTitle: "Redmi Note 13 (8GB RAM, 128GB Storage, Midnight Black)",
+    },
+    price: {
+      mrp: 18999,
+      cost: 14999,
+      discount: "21%",
+    },
     quantity: 1,
-    description: "A well-rounded smartphone with a smooth AMOLED display and all-day battery life.",
+    description:
+      "A well-rounded smartphone with a smooth AMOLED display and all-day battery life.",
     discount: "No Cost EMI Available",
     tagline: "New Launch",
   },
+
   {
     id: "product12",
+    category: "Fashion",
     url: "https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?w=400&auto=format&fit=crop",
     detailUrl: "https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?w=800&auto=format&fit=crop",
-    title: { shortTitle: "Sunglasses", longTitle: "Fastrack UV Protected Wayfarer Sunglasses (Unisex, Black)" },
-    price: { mrp: 1499, cost: 749, discount: "50%" },
+    title: {
+      shortTitle: "Sunglasses",
+      longTitle: "Fastrack UV Protected Wayfarer Sunglasses (Unisex, Black)",
+    },
+    price: {
+      mrp: 1499,
+      cost: 749,
+      discount: "50%",
+    },
     quantity: 1,
-    description: "Classic wayfarer-style sunglasses with UV400 protection and a durable frame.",
+    description:
+      "Classic wayfarer-style sunglasses with UV400 protection and a durable frame.",
     discount: "Flat 50% Off",
     tagline: "Summer Special",
   },
+
   {
     id: "product13",
+    category: "Electronics",
     url: "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGxhcHRvcHxlbnwwfHwwfHx8MA%3D%3D",
-    detailUrl: "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGxhcHRvcHxlbnwwfHwwfHx8MA%3D%3D",
-    title: { shortTitle: "MacBook", longTitle: "MacBook pro" },
-    price: { mrp: 183495, cost: 132446, discount: "30%" },
+    detailUrl:
+      "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGxhcHRvcHxlbnwwfHwwfHx8MA%3D%3D",
+    title: {
+      shortTitle: "MacBook",
+      longTitle: "MacBook pro",
+    },
+    price: {
+      mrp: 183495,
+      cost: 132446,
+      discount: "30%",
+    },
     quantity: 1,
-    description: "Soft foam cushioning and a breathable mesh upper for daily training.",
+    description:
+      "Soft foam cushioning and a breathable mesh upper for daily training.",
     discount: "Flat 30% Off",
     tagline: "New Arrival",
   },
+
   {
     id: "product14",
+    category: "Electronics",
     url: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    detailUrl: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: { shortTitle: "Laptops", longTitle: "ASUS Vivobook 15 (Ryzen 5, 8GB RAM, 512GB SSD)" },
-    price: { mrp: 94999, cost: 62999, discount: "22%" },
+    detailUrl: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWd8fGVufDB8fHx8fA%3D%3D",
+    title: {
+      shortTitle: "Laptops",
+      longTitle: "ASUS Vivobook 15 (Ryzen 5, 8GB RAM, 512GB SSD)",
+    },
+    price: {
+      mrp: 94999,
+      cost: 62999,
+      discount: "22%",
+    },
     quantity: 1,
-    description: "A slim, lightweight laptop with a full HD display and fast SSD storage.",
+    description:
+      "A slim, lightweight laptop with a full HD display and fast SSD storage.",
     discount: "Extra ₹2000 Off",
     tagline: "Top Rated",
   },
+
   {
     id: "product15",
+    category: "Fashion",
     url: "https://images.unsplash.com/photo-1616406432452-07bc5938759d?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     detailUrl: "https://images.unsplash.com/photo-1616406432452-07bc5938759d?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: { shortTitle: "Formal Shoes", longTitle: "Bata Comfit Formal Slip-On Shoes (Men, Black)" },
-    price: { mrp: 1899, cost: 1139, discount: "40%" },
+    title: {
+      shortTitle: "Formal Shoes",
+      longTitle: "Bata Comfit Formal Slip-On Shoes (Men, Black)",
+    },
+    price: {
+      mrp: 1899,
+      cost: 1139,
+      discount: "40%",
+    },
     quantity: 1,
-    description: "Classic formal slip-on shoes with a cushioned footbed.",
+    description:
+      "Classic formal slip-on shoes with a cushioned footbed.",
     discount: "Minimum 40% Off",
     tagline: "Office Essentials",
   },
+
   {
     id: "product16",
+    category: "Fashion",
     url: "https://images.unsplash.com/photo-1600857062241-98e5dba7f214?q=80&w=798&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     detailUrl: "https://images.unsplash.com/photo-1600857062241-98e5dba7f214?q=80&w=798&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: { shortTitle: "Handbags", longTitle: "Caprese Women's Sling Bag (Tan, Faux Leather)" },
-    price: { mrp: 2299, cost: 1149, discount: "50%" },
+    title: {
+      shortTitle: "Handbags",
+      longTitle: "Caprese Women's Sling Bag (Tan, Faux Leather)",
+    },
+    price: {
+      mrp: 2299,
+      cost: 1149,
+      discount: "50%",
+    },
     quantity: 1,
-    description: "A stylish, spacious sling bag with adjustable strap and faux leather finish.",
+    description:
+      "A stylish, spacious sling bag with adjustable strap and faux leather finish.",
     discount: "Flat 50% Off",
     tagline: "Fashion Pick",
   },
+
   {
     id: "product17",
+    category: "Fashion",
     url: "https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?q=80&w=1072&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    detailUrl:"https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?q=80&w=1072&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: { shortTitle: "Kids Wear", longTitle: "H&M Kids Cotton T-Shirt and Shorts Set (Unisex)" },
-    price: { mrp: 999, cost: 499, discount: "50%" },
+    detailUrl:
+      "https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?q=80&w=1072&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    title: {
+      shortTitle: "Kids Wear",
+      longTitle: "H&M Kids Cotton T-Shirt and Shorts Set (Unisex)",
+    },
+    price: {
+      mrp: 999,
+      cost: 499,
+      discount: "50%",
+    },
     quantity: 1,
-    description: "Soft, breathable cotton t-shirt and shorts combo for everyday comfort.",
+    description:
+      "Soft, breathable cotton t-shirt and shorts combo for everyday comfort.",
     discount: "Buy 2 Get 1 Free",
     tagline: "Kids Special",
   },
+
   {
     id: "product18",
+    category: "Appliances",
     url: "https://plus.unsplash.com/premium_photo-1718043036199-d98bef36af46?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    detailUrl:"https://plus.unsplash.com/premium_photo-1718043036199-d98bef36af46?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: { shortTitle: "Mixer Grinders", longTitle: "Bajaj Rex 500W Mixer Grinder (3 Jars, White/Purple)" },
-    price: { mrp: 3295, cost: 2099, discount: "36%" },
+    detailUrl:
+      "https://plus.unsplash.com/premium_photo-1718043036199-d98bef36af46?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    title: {
+      shortTitle: "Mixer Grinders",
+      longTitle: "Bajaj Rex 500W Mixer Grinder (3 Jars, White/Purple)",
+    },
+    price: {
+      mrp: 3295,
+      cost: 2099,
+      discount: "36%",
+    },
     quantity: 1,
-    description: "500W motor with 3 stainless steel jars, ideal for everyday kitchen tasks.",
+    description:
+      "500W motor with 3 stainless steel jars, ideal for everyday kitchen tasks.",
     discount: "Extra 10% Off",
     tagline: "Kitchen Essentials",
   },
+
   {
     id: "product19",
+    category: "Home",
     url: "https://images.unsplash.com/photo-1584990347193-6bebebfeaeee?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    detailUrl: "https://images.unsplash.com/photo-1584990347193-6bebebfeaeee?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: { shortTitle: "Cookware", longTitle: "Prestige Non-Stick Frying Pan (26cm, Induction Base)" },
-    price: { mrp: 1995, cost: 1399, discount: "40%" },
+    detailUrl:
+      "https://images.unsplash.com/photo-1584990347193-6bebebfeaeee?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    title: {
+      shortTitle: "Cookware",
+      longTitle: "Prestige Non-Stick Frying Pan (26cm, Induction Base)",
+    },
+    price: {
+      mrp: 1995,
+      cost: 1399,
+      discount: "40%",
+    },
     quantity: 1,
-    description: "A durable non-stick frying pan with an induction-compatible base.",
+    description:
+      "A durable non-stick frying pan with an induction-compatible base.",
     discount: "Minimum 40% Off",
     tagline: "Home & Kitchen",
   },
+
   {
     id: "product20",
+    category: "Home",
     url: "https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    detailUrl: "https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: { shortTitle: "Wall Clocks", longTitle: "Ajanta Quartz Analog Wall Clock (12 inch, Wooden Finish)" },
-    price: { mrp: 799, cost: 399, discount: "50%" },
+    detailUrl:
+      "https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    title: {
+      shortTitle: "Wall Clocks",
+      longTitle: "Ajanta Quartz Analog Wall Clock (12 inch, Wooden Finish)",
+    },
+    price: {
+      mrp: 799,
+      cost: 399,
+      discount: "50%",
+    },
     quantity: 1,
-    description: "A classic wooden-finish analog wall clock with silent sweep movement.",
+    description:
+      "A classic wooden-finish analog wall clock with silent sweep movement.",
     discount: "Flat 50% Off",
     tagline: "Home Decor",
   },
+
   {
     id: "product21",
+    category: "Beauty",
     url: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    detailUrl:"https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: { shortTitle: "Makeup", longTitle: "Lakme 9 to 5 Matte Lipstick (Coral, 3.6g)" },
-    price: { mrp: 449, cost: 292, discount: "35%" },
+    detailUrl:
+      "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    title: {
+      shortTitle: "Makeup",
+      longTitle: "Lakme 9 to 5 Matte Lipstick (Coral, 3.6g)",
+    },
+    price: {
+      mrp: 449,
+      cost: 292,
+      discount: "35%",
+    },
     quantity: 1,
-    description: "A long-lasting matte lipstick with a lightweight, non-drying formula.",
+    description:
+      "A long-lasting matte lipstick with a lightweight, non-drying formula.",
     discount: "Buy 1 Get 1",
     tagline: "Beauty Bestseller",
   },
+
   {
     id: "product22",
+    category: "Beauty",
     url: "https://images.unsplash.com/photo-1580870069867-74c57ee1bb07?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    detailUrl: "https://images.unsplash.com/photo-1580870069867-74c57ee1bb07?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: { shortTitle: "Skincare", longTitle: "Minimalist 10% Niacinamide Face Serum (30ml)" },
-    price: { mrp: 599, cost: 449, discount: "25%" },
+    detailUrl:
+      "https://images.unsplash.com/photo-1580870069867-74c57ee1bb07?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWd8fDB8fHx8fA%3D%3D",
+    title: {
+      shortTitle: "Skincare",
+      longTitle: "Minimalist 10% Niacinamide Face Serum (30ml)",
+    },
+    price: {
+      mrp: 599,
+      cost: 449,
+      discount: "25%",
+    },
     quantity: 1,
-    description: "A lightweight serum to help reduce blemishes and control excess oil.",
+    description:
+      "A lightweight serum to help reduce blemishes and control excess oil.",
     discount: "Extra 5% Off",
     tagline: "Skincare Essentials",
   },
+
   {
     id: "product23",
+    category: "Beauty",
     url: "https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    detailUrl: "https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: { shortTitle: "Perfumes", longTitle: "Wild Stone Code Platinum Perfume (Men, 120ml)" },
-    price: { mrp: 899, cost: 449, discount: "50%" },
+    detailUrl:
+      "https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWd8fGVufDB8fHx8fA%3D%3D",
+    title: {
+      shortTitle: "Perfumes",
+      longTitle: "Wild Stone Code Platinum Perfume (Men, 120ml)",
+    },
+    price: {
+      mrp: 899,
+      cost: 449,
+      discount: "50%",
+    },
     quantity: 1,
-    description: "A long-lasting fragrance with woody and citrus notes.",
+    description:
+      "A long-lasting fragrance with woody and citrus notes.",
     discount: "Flat 50% Off",
     tagline: "Grooming Pick",
   },
+
   {
     id: "product24",
-    url: "https://images.unsplash.com/photo-1610244767159-0f9797ff1926?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    detailUrl: "https://images.unsplash.com/photo-1610244767159-0f9797ff1926?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: { shortTitle: "Luggage", longTitle: "American Tourister Hardside Trolley Bag (55cm, Blue)" },
-    price: { mrp: 5999, cost: 3599, discount: "40%" },
+    category: "Travel",
+    url: "https://images.unsplash.com/photo-1610244767159-0f9797ff1926?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWd8fGVufDB8fHx8fA%3D%3D",
+    detailUrl:
+      "https://images.unsplash.com/photo-1610244767159-0f9797ff1926?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWd8fGVufDB8fHx8fA%3D%3D",
+    title: {
+      shortTitle: "Luggage",
+      longTitle: "American Tourister Hardside Trolley Bag (55cm, Blue)",
+    },
+    price: {
+      mrp: 5999,
+      cost: 3599,
+      discount: "40%",
+    },
     quantity: 1,
-    description: "A durable hardside trolley bag with smooth spinner wheels.",
+    description:
+      "A durable hardside trolley bag with smooth spinner wheels.",
     discount: "Extra 10% Off",
     tagline: "Travel Essentials",
   },
+
   {
     id: "product25",
-    url: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    detailUrl: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: { shortTitle: "Water Bottles", longTitle: "Milton Thermosteel Flip Lid Water Bottle (1L, Steel)" },
-    price: { mrp: 999, cost: 649, discount: "35%" },
+    category: "Grocery",
+    url: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWd8fGVufDB8fHx8fA%3D%3D",
+    detailUrl:
+      "https://images.unsplash.com/photo-1602143407151-7111542de6e8?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWd8fGVufDB8fHx8fA%3D%3D",
+    title: {
+      shortTitle: "Water Bottles",
+      longTitle: "Milton Thermosteel Flip Lid Water Bottle (1L, Steel)",
+    },
+    price: {
+      mrp: 999,
+      cost: 649,
+      discount: "35%",
+    },
     quantity: 1,
-    description: "A double-walled steel bottle that keeps beverages hot or cold for hours.",
+    description:
+      "A double-walled steel bottle that keeps beverages hot or cold for hours.",
     discount: "Minimum 35% Off",
     tagline: "Daily Essentials",
   },
-
 ];

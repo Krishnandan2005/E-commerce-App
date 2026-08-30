@@ -4,15 +4,25 @@ import {
   Button,
   Typography,
   styled,
+  Menu,
+  MenuItem,
 } from "@mui/material";
+
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { DataContext } from "../../context/DataProvider";
 import LoginDialog from "../Login/LoginDialog";
 import Profile from "./Profile";
+
 import { useSelector } from "react-redux";
+
+// ======================================================
+// WRAPPER
+// ======================================================
 
 const Wrapper = styled(Box, {
   shouldForwardProp: (prop) => prop !== "isDrawer",
@@ -31,6 +41,10 @@ const Wrapper = styled(Box, {
   }),
 }));
 
+// ======================================================
+// LOGIN BUTTON
+// ======================================================
+
 const LoginButton = styled(Button)({
   color: "#1E293B",
   background: "#FFE500",
@@ -44,6 +58,10 @@ const LoginButton = styled(Button)({
     boxShadow: "none",
   },
 });
+
+// ======================================================
+// NAV TEXT
+// ======================================================
 
 const NavText = styled(Typography, {
   shouldForwardProp: (prop) => prop !== "isDrawer",
@@ -61,6 +79,10 @@ const NavText = styled(Typography, {
   }),
 }));
 
+// ======================================================
+// ICON CONTAINER
+// ======================================================
+
 const IconContainer = styled(Box, {
   shouldForwardProp: (prop) => prop !== "isDrawer",
 })(({ isDrawer }) => ({
@@ -71,40 +93,322 @@ const IconContainer = styled(Box, {
   cursor: "pointer",
 }));
 
-const CustomButtons = ({ isDrawer = false }) => {
+// ======================================================
+// CUSTOM BUTTONS
+// ======================================================
+
+const CustomButtons = ({
+  isDrawer = false,
+  sellerMode = false,
+}) => {
   const [open, setOpen] = useState(false);
+  const [moreAnchorEl, setMoreAnchorEl] = useState(null);
+
   const { account, setAccount } = useContext(DataContext);
-  const { cartItems } = useSelector((state) => state.cart);
+
+  const { cartItems } = useSelector(
+    (state) => state.cart
+  );
+
+  const navigate = useNavigate();
+
+  // ======================================================
+  // SELLER
+  // ======================================================
+
+  const seller = JSON.parse(
+    localStorage.getItem("seller")
+  );
+
+  // ======================================================
+  // MORE MENU
+  // ======================================================
+
+  const handleMoreClick = (event) => {
+    setMoreAnchorEl(event.currentTarget);
+  };
+
+  const handleMoreClose = () => {
+    setMoreAnchorEl(null);
+  };
+
+  // ======================================================
+  // BECOME SELLER
+  // ======================================================
+
+  const handleBecomeSeller = () => {
+    handleMoreClose();
+    navigate("/seller");
+  };
+
+  // ======================================================
+  // SELLER DASHBOARD
+  // ======================================================
+
+  const handleSellerDashboard = () => {
+    handleMoreClose();
+    navigate("/seller/dashboard");
+  };
+
+  // ======================================================
+  // ADD PRODUCT
+  // ======================================================
+
+  const handleAddProduct = () => {
+    handleMoreClose();
+    navigate("/seller/add-product");
+  };
+
+  // ======================================================
+  // MANAGE PRODUCTS
+  // ======================================================
+
+  const handleManageProducts = () => {
+    handleMoreClose();
+    navigate("/seller/products");
+  };
+
+  // ======================================================
+  // SELLER LOGOUT
+  // ======================================================
+
+  const handleSellerLogout = () => {
+    handleMoreClose();
+
+    localStorage.removeItem("seller");
+
+    navigate("/seller");
+  };
+
+  const moreOpen = Boolean(moreAnchorEl);
 
   return (
     <>
       <Wrapper isDrawer={isDrawer}>
-        {account ? (
-          <Profile account={account} setAccount={setAccount} />
-        ) : (
-          <LoginButton variant="contained" onClick={() => setOpen(true)}>
-            Login
-          </LoginButton>
+
+        {/* ================================================== */}
+        {/* NORMAL USER MODE */}
+        {/* ================================================== */}
+
+        {!sellerMode && (
+          <>
+            {/* USER LOGIN / PROFILE */}
+
+            {account ? (
+              <Profile
+                account={account}
+                setAccount={setAccount}
+              />
+            ) : (
+              <LoginButton
+                variant="contained"
+                onClick={() => setOpen(true)}
+              >
+                Login
+              </LoginButton>
+            )}
+
+            {/* ================================================== */}
+            {/* MORE */}
+            {/* ================================================== */}
+
+            <IconContainer
+              isDrawer={isDrawer}
+              onClick={handleMoreClick}
+              aria-controls={
+                moreOpen ? "more-menu" : undefined
+              }
+              aria-haspopup="true"
+              aria-expanded={
+                moreOpen ? "true" : undefined
+              }
+            >
+              <NavText isDrawer={isDrawer}>
+                More
+              </NavText>
+
+              <ExpandMoreIcon
+                sx={{
+                  color: isDrawer
+                    ? "#000"
+                    : "#fff",
+                  fontSize: 22,
+                }}
+              />
+            </IconContainer>
+
+            {/* ================================================== */}
+            {/* MORE MENU */}
+            {/* ================================================== */}
+
+            <Menu
+              id="more-menu"
+              anchorEl={moreAnchorEl}
+              open={moreOpen}
+              onClose={handleMoreClose}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "center",
+              }}
+            >
+              <MenuItem
+                onClick={handleBecomeSeller}
+              >
+                Become a Seller
+              </MenuItem>
+
+              <MenuItem
+                onClick={handleMoreClose}
+              >
+                Help Center
+              </MenuItem>
+
+              <MenuItem
+                onClick={handleMoreClose}
+              >
+                Notifications
+              </MenuItem>
+            </Menu>
+          </>
         )}
 
-        <NavText isDrawer={isDrawer}>Become a Seller</NavText>
+        {/* ================================================== */}
+        {/* SELLER MODE */}
+        {/* ================================================== */}
 
-        <IconContainer isDrawer={isDrawer}>
-          <ExpandMoreIcon sx={{ color: isDrawer ? "#000" : "#fff" }} />
-          <NavText isDrawer={isDrawer}>More</NavText>
-        </IconContainer>
+        {sellerMode && seller && (
+          <>
+            {/* SELLER NAME */}
 
-        <IconContainer isDrawer={isDrawer}>
-          <Badge badgeContent={cartItems?.length} color="secondary">
-            <ShoppingCartIcon sx={{ color: isDrawer ? "#000" : "#fff" }} />
-          </Badge>
-          <NavText isDrawer={isDrawer} style={{ marginLeft: 10 }}>
-            Cart
-          </NavText>
-        </IconContainer>
+            <NavText isDrawer={isDrawer}>
+              {seller.firstname || "Seller"}
+            </NavText>
+
+            {/* SELLER MENU */}
+
+            <IconContainer
+              isDrawer={isDrawer}
+              onClick={handleMoreClick}
+              aria-controls={
+                moreOpen
+                  ? "seller-menu"
+                  : undefined
+              }
+              aria-haspopup="true"
+              aria-expanded={
+                moreOpen ? "true" : undefined
+              }
+            >
+              <NavText isDrawer={isDrawer}>
+                Seller
+              </NavText>
+
+              <ExpandMoreIcon
+                sx={{
+                  color: isDrawer
+                    ? "#000"
+                    : "#fff",
+                  fontSize: 22,
+                }}
+              />
+            </IconContainer>
+
+            {/* ================================================== */}
+            {/* SELLER MENU */}
+            {/* ================================================== */}
+
+            <Menu
+              id="seller-menu"
+              anchorEl={moreAnchorEl}
+              open={moreOpen}
+              onClose={handleMoreClose}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "center",
+              }}
+            >
+              <MenuItem
+                onClick={handleSellerDashboard}
+              >
+                Dashboard
+              </MenuItem>
+
+              <MenuItem
+                onClick={handleAddProduct}
+              >
+                Add Product
+              </MenuItem>
+
+              <MenuItem
+                onClick={handleManageProducts}
+              >
+                Manage Products
+              </MenuItem>
+
+              <MenuItem
+                onClick={handleSellerLogout}
+              >
+                Logout
+              </MenuItem>
+            </Menu>
+          </>
+        )}
+
+        {/* ================================================== */}
+        {/* CART */}
+        {/* ================================================== */}
+
+        {!sellerMode && (
+          <IconContainer
+            isDrawer={isDrawer}
+            onClick={() => navigate("/cart")}
+          >
+            <Badge
+              badgeContent={
+                cartItems?.length || 0
+              }
+              color="secondary"
+            >
+              <ShoppingCartIcon
+                sx={{
+                  color: isDrawer
+                    ? "#000"
+                    : "#fff",
+                }}
+              />
+            </Badge>
+
+            <NavText
+              isDrawer={isDrawer}
+              style={{
+                marginLeft: 10,
+              }}
+            >
+              Cart
+            </NavText>
+          </IconContainer>
+        )}
+
       </Wrapper>
 
-      <LoginDialog open={open} setOpen={setOpen} />
+      {/* ================================================== */}
+      {/* USER LOGIN DIALOG */}
+      {/* ================================================== */}
+
+      {!sellerMode && (
+        <LoginDialog
+          open={open}
+          setOpen={setOpen}
+        />
+      )}
     </>
   );
 };

@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, styled, Typography } from "@mui/material";
 import { navData } from "../../Constants/data";
+import { Link } from "react-router-dom";
 
 const Component = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -17,6 +18,7 @@ const Component = styled(Box)(({ theme }) => ({
   "&::-webkit-scrollbar": {
     height: "4px",
   },
+
   "&::-webkit-scrollbar-thumb": {
     background: "#e2e8f0",
     borderRadius: "4px",
@@ -72,11 +74,21 @@ const NavBar = () => {
       <Component>
         {navData.map((item) => {
           const Icon = item.icon;
+
           return (
-            <Container key={item.text}>
+            <Container
+              key={item.text}
+              component={Link}
+              to={`/products?category=${encodeURIComponent(item.text)}`}
+              sx={{
+                textDecoration: "none",
+                color: "inherit",
+              }}
+            >
               <IconWrapper className="icon-wrapper">
                 <Icon sx={{ fontSize: 30, color: "#1E293B" }} />
               </IconWrapper>
+
               <Text>{item.text}</Text>
             </Container>
           );

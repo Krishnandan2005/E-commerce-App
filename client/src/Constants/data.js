@@ -19,7 +19,7 @@ export const navData = [
   { icon: ChairIcon, text: "Home" },
   { icon: KitchenIcon, text: "Appliances" },
   { icon: FlightIcon, text: "Travel" },
-  { icon: SpaIcon, text: "Beauty, Toys & More" },
+  { icon: SpaIcon, text: "Beauty" },
 ];
 
 export const bannerContent = [

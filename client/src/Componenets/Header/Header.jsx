@@ -7,12 +7,20 @@ import {
   Drawer,
   IconButton,
 } from "@mui/material";
+
 import Search from "./Search";
 import CustomButtons from "./CustomButtons";
-import { Link } from "react-router-dom";
+
+import { Link, useLocation } from "react-router-dom";
+
 import MenuIcon from "@mui/icons-material/Menu";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+
 import { useState } from "react";
+
+// ======================================================
+// HEADER
+// ======================================================
 
 const StyledHeader = styled(AppBar)`
   background: linear-gradient(90deg, #1e293b 0%, #334155 100%);
@@ -21,12 +29,20 @@ const StyledHeader = styled(AppBar)`
   border-bottom: 3px solid #ffe500;
 `;
 
+// ======================================================
+// TOOLBAR
+// ======================================================
+
 const StyledToolbar = styled(Toolbar)`
   min-height: 56px !important;
   padding: 0 16px !important;
   display: flex;
   align-items: center;
 `;
+
+// ======================================================
+// LOGO
+// ======================================================
 
 const LogoContainer = styled(Link)(({ theme }) => ({
   display: "flex",
@@ -45,10 +61,14 @@ const LogoIconWrapper = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: center;
+
   width: 32px;
   height: 32px;
+
   border-radius: 8px;
+
   background: #ffe500;
+
   box-shadow: 0 2px 8px rgba(255, 229, 0, 0.4);
 `;
 
@@ -56,6 +76,10 @@ const StyledCartIcon = styled(ShoppingCartIcon)`
   color: #1e293b;
   font-size: 20px;
 `;
+
+// ======================================================
+// LOGO TEXT
+// ======================================================
 
 const LogoTextWrapper = styled(Box)`
   display: flex;
@@ -81,10 +105,14 @@ const LogoText = styled(Typography)`
 const SubHeading = styled(Typography)`
   display: flex;
   align-items: center;
+
   font-size: 11px;
   font-style: italic;
+
   color: #ffffff;
+
   margin-top: 3px;
+
   opacity: 0.9;
 `;
 
@@ -94,6 +122,10 @@ const PlusText = styled("span")`
   margin-left: 2px;
 `;
 
+// ======================================================
+// CUSTOM BUTTON WRAPPER
+// ======================================================
+
 const CustomButtonWrapper = styled(Box)(({ theme }) => ({
   margin: "0 5px 0 12px",
 
@@ -101,6 +133,10 @@ const CustomButtonWrapper = styled(Box)(({ theme }) => ({
     display: "none",
   },
 }));
+
+// ======================================================
+// MOBILE MENU
+// ======================================================
 
 const MenuButton = styled(IconButton)(({ theme }) => ({
   display: "none",
@@ -112,26 +148,62 @@ const MenuButton = styled(IconButton)(({ theme }) => ({
   },
 }));
 
+// ======================================================
+// DRAWER
+// ======================================================
+
 const DrawerWrapper = styled(Box)`
   width: 250px;
   padding: 20px 10px;
 `;
 
+// ======================================================
+// HEADER COMPONENT
+// ======================================================
+
 const Header = () => {
   const [open, setOpen] = useState(false);
+
+  // Get current URL
+  const location = useLocation();
+
+  // Check if current page is a seller page
+  const sellerMode = location.pathname.startsWith("/seller");
 
   return (
     <StyledHeader>
       <StyledToolbar>
+
+        {/* ================================================== */}
+        {/* MOBILE MENU BUTTON */}
+        {/* ================================================== */}
+
         <MenuButton onClick={() => setOpen(true)}>
           <MenuIcon />
         </MenuButton>
 
-        <Drawer anchor="left" open={open} onClose={() => setOpen(false)}>
+        {/* ================================================== */}
+        {/* MOBILE DRAWER */}
+        {/* ================================================== */}
+
+        <Drawer
+          anchor="left"
+          open={open}
+          onClose={() => setOpen(false)}
+        >
           <DrawerWrapper>
-            <CustomButtons isDrawer />
+
+            <CustomButtons
+              isDrawer={true}
+              sellerMode={sellerMode}
+            />
+
           </DrawerWrapper>
         </Drawer>
+
+        {/* ================================================== */}
+        {/* LOGO */}
+        {/* ================================================== */}
 
         <LogoContainer to="/">
           <LogoIconWrapper>
@@ -139,22 +211,39 @@ const Header = () => {
           </LogoIconWrapper>
 
           <LogoTextWrapper>
+
             <LogoText>
               Quick<span>Cart</span>247
             </LogoText>
 
             <SubHeading>
               Shop Smart
-              <PlusText>&nbsp;• Anytime</PlusText>
+              <PlusText>
+                &nbsp;• Anytime
+              </PlusText>
             </SubHeading>
+
           </LogoTextWrapper>
         </LogoContainer>
 
+        {/* ================================================== */}
+        {/* SEARCH */}
+        {/* ================================================== */}
+
         <Search />
 
+        {/* ================================================== */}
+        {/* RIGHT SIDE BUTTONS */}
+        {/* ================================================== */}
+
         <CustomButtonWrapper>
-          <CustomButtons />
+
+          <CustomButtons
+            sellerMode={sellerMode}
+          />
+
         </CustomButtonWrapper>
+
       </StyledToolbar>
     </StyledHeader>
   );

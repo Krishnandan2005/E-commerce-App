@@ -1,98 +1,162 @@
-import { useState, useEffect } from "react";
-import { Box, Typography, styled } from "@mui/material";
+import {
+  Box,
+  Typography,
+  styled,
+} from "@mui/material";
 
-const Header = styled(Box)`
-    padding: 15px 24px;
-    background: #fff;
-    border-bottom: 1px solid #f0f0f0;
+const Container = styled(Box)`
+  background: #fff;
+  padding: 20px;
 `;
 
 const Heading = styled(Typography)`
-    color: #878787;
+  color: #878787;
+  font-size: 16px;
+  font-weight: 600;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
 `;
 
-const Container = styled(Box)`
-    padding: 15px 24px;
-    background: #fff;
-
-    & > p {
-        margin-bottom: 20px;
-        font-size: 14px;
-    }
+const PriceRow = styled(Box)`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 `;
 
-const Price = styled(Typography)`
-    float: right;
+const TotalRow = styled(Box)`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding: 20px 0;
+  border-top: 1px dashed #ddd;
+  border-bottom: 1px dashed #ddd;
 `;
 
-const TotalText = styled(Typography)`
-    font-size: 18px;
-    font-weight: 600;
-    border-top: 1px dashed #e0e0e0;
-    padding: 20px 0;
-    border-bottom: 1px dashed #e0e0e0;
+const Savings = styled(Typography)`
+  color: #388e3c;
+  font-weight: 600;
+  margin-top: 20px;
 `;
 
-const Discount = styled(Typography)`
-    font-size: 16px;
-    color: green;
-`;
+const TotalAmount = ({ cartItems = [] }) => {
 
-const TotalAmount = ({ cartItems }) => {
-    const [price, setPrice] = useState(0);
-    const [discount, setDiscount] = useState(0);
+  // ==================================================
+  // TOTAL MRP
+  // ==================================================
 
-    useEffect(() => {
-        totalAmount();
-    }, [cartItems]);
+  const totalMRP = cartItems.reduce(
+    (total, item) =>
+      total +
+      Number(item.price?.mrp || 0) *
+        Number(item.quantity || 1),
+    0
+  );
 
-    const totalAmount = () => {
-        const { totalPrice, totalDiscount } = cartItems.reduce(
-            (acc, item) => {
-                acc.totalPrice += item.price.mrp;
-                acc.totalDiscount += item.price.mrp - item.price.cost;
-                return acc;
-            },
-            { totalPrice: 0, totalDiscount: 0 }
-        );
+  // ==================================================
+  // TOTAL PRODUCT PRICE
+  // ==================================================
 
-        setPrice(totalPrice);
-        setDiscount(totalDiscount);
-    };
+  const totalCost = cartItems.reduce(
+    (total, item) =>
+      total +
+      Number(item.price?.cost || 0) *
+        Number(item.quantity || 1),
+    0
+  );
 
-    return (
-        <Box>
-            <Header>
-                <Heading>PRICE DETAILS</Heading>
-            </Header>
+  // ==================================================
+  // DISCOUNT
+  // ==================================================
 
-            <Container>
-                <Typography>
-                    Price ({cartItems.length} item{cartItems.length > 1 ? "s" : ""})
-                    <Price component="span">₹{price}</Price>
-                </Typography>
+  const totalDiscount = totalMRP - totalCost;
 
-                <Typography>
-                    Discount
-                    <Price component="span">-₹{discount}</Price>
-                </Typography>
+  // ==================================================
+  // DELIVERY
+  // ==================================================
 
-                <Typography>
-                    Delivery Charges
-                    <Price component="span">₹40</Price>
-                </Typography>
+  const deliveryCharge = totalCost > 500 ? 0 : 40;
 
-                <TotalText>
-                    Total Amount
-                    <Price component="span">₹{price - discount + 40}</Price>
-                </TotalText>
+  // ==================================================
+  // FINAL TOTAL
+  // ==================================================
 
-                <Discount>
-                    You will save ₹{discount - 40} on this order
-                </Discount>
-            </Container>
-        </Box>
-    );
+  const totalAmount =
+    totalCost + deliveryCharge;
+
+  return (
+    <Container>
+
+      <Heading>
+        PRICE DETAILS
+      </Heading>
+
+      {/* PRICE */}
+
+      <PriceRow>
+        <Typography>
+          Price
+        </Typography>
+
+        <Typography>
+          ₹{totalMRP}
+        </Typography>
+      </PriceRow>
+
+      {/* DISCOUNT */}
+
+      <PriceRow>
+        <Typography>
+          Discount
+        </Typography>
+
+        <Typography sx={{ color: "#388e3c" }}>
+          - ₹{totalDiscount}
+        </Typography>
+      </PriceRow>
+
+      {/* DELIVERY */}
+
+      <PriceRow>
+        <Typography>
+          Delivery Charges
+        </Typography>
+
+        <Typography
+          sx={{
+            color:
+              deliveryCharge === 0
+                ? "#388e3c"
+                : "#212121",
+          }}
+        >
+          {deliveryCharge === 0
+            ? "FREE"
+            : `₹${deliveryCharge}`}
+        </Typography>
+      </PriceRow>
+
+      {/* TOTAL */}
+
+      <TotalRow>
+
+        <Typography fontWeight={600}>
+          Total Amount
+        </Typography>
+
+        <Typography fontWeight={600}>
+          ₹{totalAmount}
+        </Typography>
+
+      </TotalRow>
+
+      {/* SAVINGS */}
+
+      <Savings>
+        You will save ₹{totalDiscount}
+      </Savings>
+
+    </Container>
+  );
 };
 
 export default TotalAmount;

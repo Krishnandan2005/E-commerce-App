@@ -61,7 +61,9 @@ const TabButton = styled(Box, {
   background: active
     ? "linear-gradient(135deg, #4C3FE0 0%, #7C3AED 100%)"
     : "transparent",
-  boxShadow: active ? "0 4px 10px rgba(76, 63, 224, 0.3)" : "none",
+  boxShadow: active
+    ? "0 4px 10px rgba(76, 63, 224, 0.3)"
+    : "none",
   transition: "all 0.2s ease",
 }));
 
@@ -171,45 +173,119 @@ const loginInitialValues = {
   password: "",
 };
 
-function LoginDialog({ open, setOpen }) {
+function LoginDialog({ open, setOpen, onSuccess }) {
   const [view, setView] = useState("login");
+
   const [signup, setSignup] = useState(signupInitialValues);
+
   const [login, setLogin] = useState(loginInitialValues);
+
   const [error, setError] = useState("");
 
   const { setAccount } = useContext(DataContext);
 
+  // ======================================================
+  // SIGNUP INPUT
+  // ======================================================
+
   const onInputChange = (e) => {
-    setSignup({ ...signup, [e.target.name]: e.target.value });
+    setSignup({
+      ...signup,
+      [e.target.name]: e.target.value,
+    });
   };
 
+  // ======================================================
+  // LOGIN INPUT
+  // ======================================================
+
   const onValueChange = (e) => {
-    setLogin({ ...login, [e.target.name]: e.target.value });
+    setLogin({
+      ...login,
+      [e.target.name]: e.target.value,
+    });
   };
+
+  // ======================================================
+  // CLOSE DIALOG
+  // ======================================================
 
   const handleClose = () => {
     setOpen(false);
+
     setView("login");
+
     setSignup(signupInitialValues);
+
     setLogin(loginInitialValues);
+
     setError("");
   };
 
+  // ======================================================
+  // SIGNUP
+  // ======================================================
+
   const signupUser = async () => {
-    const response = await authenticateSignup(signup);
-    if (!response) return;
-    setAccount(signup.firstname);
-    handleClose();
+    try {
+      setError("");
+
+      const response = await authenticateSignup(signup);
+
+      if (!response) {
+        return;
+      }
+
+      // Set logged-in account
+      setAccount(signup.firstname);
+
+      // Close login dialog
+      handleClose();
+
+      // Continue the action that opened the login dialog
+      if (onSuccess) {
+        onSuccess();
+      }
+    } catch (error) {
+      setError(
+        error?.response?.data?.message ||
+          "Unable to create account"
+      );
+    }
   };
 
+  // ======================================================
+  // LOGIN
+  // ======================================================
+
   const loginUser = async () => {
-    const response = await authenticateLogin(login);
-    if (response.status === 200) {
+    try {
       setError("");
-      setAccount(response.data.data.firstname);
-      handleClose();
-    } else {
-      setError(response.data.message);
+
+      const response = await authenticateLogin(login);
+
+      if (response.status === 200) {
+        // Set logged-in account
+        setAccount(response.data.data.firstname);
+
+        // Close login dialog
+        handleClose();
+
+        // Continue the pending action
+        if (onSuccess) {
+          onSuccess();
+        }
+      } else {
+        setError(
+          response.data.message ||
+            "Invalid username or password"
+        );
+      }
+    } catch (error) {
+      setError(
+        error?.response?.data?.message ||
+          "Invalid username or password"
+      );
     }
   };
 
@@ -217,86 +293,179 @@ function LoginDialog({ open, setOpen }) {
     <Dialog
       open={open}
       onClose={handleClose}
-      PaperProps={{ sx: { borderRadius: "16px" } }}
+      PaperProps={{
+        sx: {
+          borderRadius: "16px",
+        },
+      }}
     >
       <Component>
+
+        {/* ======================================================
+            HEADER
+        ====================================================== */}
+
         <Header>
           <LogoCircle>
-            <ShoppingCartIcon sx={{ color: "#1E293B", fontSize: 30 }} />
+            <ShoppingCartIcon
+              sx={{
+                color: "#1E293B",
+                fontSize: 30,
+              }}
+            />
           </LogoCircle>
-          <Typography variant="h6" fontWeight={700}>
+
+          <Typography
+            variant="h6"
+            fontWeight={700}
+          >
             Welcome to QuickCart247
           </Typography>
-          <Typography sx={{ fontSize: 13, color: "#64748B", mt: 0.5 }}>
+
+          <Typography
+            sx={{
+              fontSize: 13,
+              color: "#64748B",
+              mt: 0.5,
+            }}
+          >
             Shop smart, anytime, anywhere
           </Typography>
         </Header>
 
+        {/* ======================================================
+            LOGIN / SIGNUP TABS
+        ====================================================== */}
+
         <TabSwitch>
-          <TabButton active={view === "login"} onClick={() => setView("login")}>
+
+          <TabButton
+            active={view === "login"}
+            onClick={() => {
+              setView("login");
+              setError("");
+            }}
+          >
             Log in
           </TabButton>
-          <TabButton active={view === "signup"} onClick={() => setView("signup")}>
+
+          <TabButton
+            active={view === "signup"}
+            onClick={() => {
+              setView("signup");
+              setError("");
+            }}
+          >
             Sign up
           </TabButton>
+
         </TabSwitch>
 
+        {/* ======================================================
+            LOGIN
+        ====================================================== */}
+
         {view === "login" ? (
-          <Box display="flex" flexDirection="column" gap="18px">
+
+          <Box
+            display="flex"
+            flexDirection="column"
+            gap="18px"
+          >
+
             <StyledField
               fullWidth
               size="small"
               label="Username"
               name="username"
+              autoComplete="off"
+              value={login.username}
               onChange={onValueChange}
             />
+
             <StyledField
               fullWidth
               size="small"
               label="Password"
               type="password"
               name="password"
+              autoComplete="new-password"
+              value={login.password}
               onChange={onValueChange}
             />
 
             {error && (
-              <Typography sx={{ color: "#DC2626", fontSize: 13 }}>
+              <Typography
+                sx={{
+                  color: "#DC2626",
+                  fontSize: 13,
+                }}
+              >
                 {error}
               </Typography>
             )}
 
-            <PrimaryButton variant="contained" fullWidth onClick={loginUser}>
+            <PrimaryButton
+              variant="contained"
+              fullWidth
+              onClick={loginUser}
+            >
               Log in
             </PrimaryButton>
 
-            <OrText>or</OrText>
+            <OrText>
+              or
+            </OrText>
 
-            <OtpButton variant="outlined" fullWidth>
+            <OtpButton
+              variant="outlined"
+              fullWidth
+            >
               Request OTP
             </OtpButton>
 
             <Terms>
-              By continuing, you agree to QuickCart247's Terms of Use and
-              Privacy Policy.
+              By continuing, you agree to QuickCart247's
+              Terms of Use and Privacy Policy.
             </Terms>
+
           </Box>
+
         ) : (
-          <Box display="flex" flexDirection="column" gap="18px">
+
+          /* ======================================================
+             SIGNUP
+          ====================================================== */
+
+          <Box
+            display="flex"
+            flexDirection="column"
+            gap="18px"
+            autoComplete="off"
+          >
+
             <FieldRow>
+
               <StyledField
                 fullWidth
                 size="small"
                 label="First name"
                 name="firstname"
+                autoComplete="off"
+                value={signup.firstname}
                 onChange={onInputChange}
               />
+
               <StyledField
                 fullWidth
                 size="small"
                 label="Last name"
                 name="lastname"
+                autoComplete="off"
+                value={signup.lastname}
                 onChange={onInputChange}
               />
+
             </FieldRow>
 
             <StyledField
@@ -304,36 +473,66 @@ function LoginDialog({ open, setOpen }) {
               size="small"
               label="Username"
               name="username"
+              autoComplete="off"
+              value={signup.username}
               onChange={onInputChange}
             />
+
             <StyledField
               fullWidth
               size="small"
               label="Email"
               name="email"
+              type="email"
+              autoComplete="off"
+              value={signup.email}
               onChange={onInputChange}
             />
+
             <StyledField
               fullWidth
               size="small"
               label="Password"
               type="password"
               name="password"
+              autoComplete="new-password"
+              value={signup.password}
               onChange={onInputChange}
             />
+
             <StyledField
               fullWidth
               size="small"
               label="Mobile number"
               name="phone"
+              type="tel"
+              autoComplete="off"
+              value={signup.phone}
               onChange={onInputChange}
             />
 
-            <PrimaryButton variant="contained" fullWidth onClick={signupUser}>
+            {error && (
+              <Typography
+                sx={{
+                  color: "#DC2626",
+                  fontSize: 13,
+                }}
+              >
+                {error}
+              </Typography>
+            )}
+
+            <PrimaryButton
+              variant="contained"
+              fullWidth
+              onClick={signupUser}
+            >
               Create account
             </PrimaryButton>
+
           </Box>
         )}
+
       </Component>
     </Dialog>
   );

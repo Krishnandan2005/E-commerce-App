@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Box, Button, styled } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import OfflineBoltIcon from "@mui/icons-material/OfflineBolt";
+
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+
 import { addToCart } from "../../redux/actions/cartActions";
+import { DataContext } from "../../context/DataProvider";
+import LoginDialog from "../Login/LoginDialog";
 
 import { loadStripe } from "@stripe/stripe-js";
 import { createCheckoutSession } from "../../service/api";
-
 
 const LeftContainer = styled(Box)(({ theme }) => ({
   minWidth: "40%",
@@ -46,65 +49,165 @@ const StyledButton = styled(Button)`
 `;
 
 const stripePromise = loadStripe(
-    import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
+  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
 );
-  const buyNow = async () => {
-    try {
-        const session = await createCheckoutSession(500);
-
-        const stripe = await stripePromise;
-
-        await stripe.redirectToCheckout({
-            sessionId: session.id,
-        });
-
-    } catch (error) {
-        console.log(error);
-    }
-};
 
 function ActionItem({ product }) {
-  const [quantity, setQuantity] = useState(1);
+  const [quantity] = useState(1);
+
+  const [loginOpen, setLoginOpen] = useState(false);
+
+  // Which action should continue after login?
+  const [pendingAction, setPendingAction] = useState(null);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const addItemToCart = () => {
+  const { account } = useContext(DataContext);
+
+  // ======================================================
+  // ADD TO CART
+  // ======================================================
+
+  const handleAddToCart = () => {
     if (!product?.id) return;
 
+    // User is NOT logged in
+    if (!account) {
+      setPendingAction("cart");
+      setLoginOpen(true);
+      return;
+    }
+
+    // User is logged in
     dispatch(addToCart(product.id, quantity));
     navigate("/cart");
   };
 
+  // ======================================================
+  // BUY NOW
+  // ======================================================
+
+  const handleBuyNow = async () => {
+    if (!product?.id) return;
+
+    // User is NOT logged in
+    if (!account) {
+      setPendingAction("buy");
+      setLoginOpen(true);
+      return;
+    }
+
+    await proceedToCheckout();
+  };
+
+  // ======================================================
+  // STRIPE CHECKOUT
+  // ======================================================
+
+  const proceedToCheckout = async () => {
+    try {
+      const session = await createCheckoutSession(
+        product?.price?.cost || 500
+      );
+
+      const stripe = await stripePromise;
+
+      if (!stripe) {
+        console.error("Stripe failed to load");
+        return;
+      }
+
+      await stripe.redirectToCheckout({
+        sessionId: session.id,
+      });
+    } catch (error) {
+      console.error("Checkout Error:", error);
+    }
+  };
+
+  // ======================================================
+  // AFTER LOGIN/SIGNUP
+  // ======================================================
+
+  const handleLoginSuccess = async () => {
+    setLoginOpen(false);
+
+    if (pendingAction === "cart") {
+      dispatch(addToCart(product.id, quantity));
+      navigate("/cart");
+    }
+
+    if (pendingAction === "buy") {
+      await proceedToCheckout();
+    }
+
+    setPendingAction(null);
+  };
+
   return (
-    <LeftContainer>
-      <ImageContainer>
-        <Image
-          src={product?.detailUrl}
-          alt={product?.title?.shortTitle}
-        />
-      </ImageContainer>
+    <>
+      <LeftContainer>
 
-      <ButtonWrapper>
-        <StyledButton
-          variant="contained"
-          sx={{ background: "#fa9c04" }}
-          onClick={addItemToCart}
-        >
-          <AddShoppingCartIcon sx={{ mr: 1 }} />
-          ADD TO CART
-        </StyledButton>
+        {/* PRODUCT IMAGE */}
 
-        <StyledButton
-          variant="contained" 
-           onClick={() => buyNow()}
-          sx={{ background: "#19d65b" }}
-        >
-          <OfflineBoltIcon sx={{ mr: 1 }} />
-          BUY NOW
-        </StyledButton>
-      </ButtonWrapper>
-    </LeftContainer>
+        <ImageContainer>
+          <Image
+  src={product?.detailUrl || product?.url}
+  alt={product?.title?.shortTitle || "Product"}
+/>
+        </ImageContainer>
+
+        {/* ACTION BUTTONS */}
+
+        <ButtonWrapper>
+
+          {/* ADD TO CART */}
+
+          <StyledButton
+            variant="contained"
+            sx={{
+              background: "#fa9c04",
+              "&:hover": {
+                background: "#e88b00",
+              },
+            }}
+            onClick={handleAddToCart}
+          >
+            <AddShoppingCartIcon sx={{ mr: 1 }} />
+
+            ADD TO CART
+          </StyledButton>
+
+          {/* BUY NOW */}
+
+          <StyledButton
+            variant="contained"
+            onClick={handleBuyNow}
+            sx={{
+              background: "#19d65b",
+              "&:hover": {
+                background: "#12bd4e",
+              },
+            }}
+          >
+            <OfflineBoltIcon sx={{ mr: 1 }} />
+
+            BUY NOW
+          </StyledButton>
+
+        </ButtonWrapper>
+
+      </LeftContainer>
+
+      {/* LOGIN DIALOG */}
+
+      <LoginDialog
+        open={loginOpen}
+        setOpen={setLoginOpen}
+        onSuccess={handleLoginSuccess}
+      />
+    </>
   );
 }
 

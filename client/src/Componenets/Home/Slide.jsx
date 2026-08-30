@@ -101,12 +101,16 @@ const Slide = ({ products = [], title, timer }) => {
 
         {timer && (
           <Timer>
-            <AccessTimeIcon sx={{ fontSize: 20, marginRight: "5px", color: "#1E293B" }} />
+            <AccessTimeIcon
+              sx={{ fontSize: 20, marginRight: "5px", color: "#1E293B" }}
+            />
             <Countdown date={Date.now() + 5.04e7} renderer={renderer} />
           </Timer>
         )}
 
-        <ViewAllButton variant="contained">View All</ViewAllButton>
+        <ViewAllButton variant="contained" component={Link} to="/products">
+          View All
+        </ViewAllButton>
       </Deal>
 
       <Divider />
@@ -137,11 +141,15 @@ const Slide = ({ products = [], title, timer }) => {
                 alt={product.title?.shortTitle || "product"}
               />
 
-              <Text style={{ fontWeight: 600 }}>{product.title?.shortTitle}</Text>
+              <Text style={{ fontWeight: 600 }}>
+                {product.title?.shortTitle}
+              </Text>
 
               <Text style={{ color: "#0F766E" }}>{product.discount}</Text>
 
-              <Text style={{ color: "#212121", opacity: 0.6 }}>{product.tagline}</Text>
+              <Text style={{ color: "#212121", opacity: 0.6 }}>
+                {product.tagline}
+              </Text>
             </ProductBox>
           </Link>
         ))}
