@@ -8,13 +8,26 @@ const URL = import.meta.env.VITE_API_URL;
 
 export const authenticateSignup = async (data) => {
   try {
-    return await axios.post(`${URL}/signup`, data);
+    return await axios.post(
+      `${URL}/signup`,
+      data
+    );
   } catch (error) {
-    console.error("Signup API Error:", error);
+    console.error(
+      "Signup API Error:",
+      error
+    );
 
     if (error.response) {
-      console.error("Status:", error.response.status);
-      console.error("Data:", error.response.data);
+      console.error(
+        "Status:",
+        error.response.status
+      );
+
+      console.error(
+        "Data:",
+        error.response.data
+      );
     }
 
     throw error;
@@ -27,8 +40,16 @@ export const authenticateSignup = async (data) => {
 
 export const authenticateLogin = async (data) => {
   try {
-    return await axios.post(`${URL}/login`, data);
+    return await axios.post(
+      `${URL}/login`,
+      data
+    );
   } catch (error) {
+    console.error(
+      "Login API Error:",
+      error
+    );
+
     return error.response;
   }
 };
@@ -37,13 +58,11 @@ export const authenticateLogin = async (data) => {
 // STRIPE CHECKOUT
 // ======================================================
 
-export const createCheckoutSession = async (amount) => {
+export const createCheckoutSession = async (orderData) => {
   try {
     const response = await axios.post(
       `${URL}/create-checkout-session`,
-      {
-        amount: Number(amount),
-      }
+      orderData
     );
 
     return response.data;
@@ -56,12 +75,13 @@ export const createCheckoutSession = async (amount) => {
     throw error;
   }
 };
-
 // ======================================================
 // CREATE ORDER
 // ======================================================
 
-export const createOrder = async (orderData) => {
+export const createOrder = async (
+  orderData
+) => {
   try {
     const response = await axios.post(
       `${URL}/orders`,
@@ -69,8 +89,13 @@ export const createOrder = async (orderData) => {
     );
 
     return response.data;
+
   } catch (error) {
-    console.error("Create Order API Error:", error);
+    console.error(
+      "Create Order API Error:",
+      error
+    );
+
     throw error;
   }
 };
@@ -79,15 +104,22 @@ export const createOrder = async (orderData) => {
 // GET USER ORDERS
 // ======================================================
 
-export const getUserOrders = async (userId) => {
+export const getUserOrders = async (
+  userId
+) => {
   try {
     const response = await axios.get(
       `${URL}/orders/${userId}`
     );
 
     return response.data;
+
   } catch (error) {
-    console.error("Get User Orders API Error:", error);
+    console.error(
+      "Get User Orders API Error:",
+      error
+    );
+
     throw error;
   }
 };
@@ -96,15 +128,22 @@ export const getUserOrders = async (userId) => {
 // GET SINGLE ORDER
 // ======================================================
 
-export const getOrderById = async (orderId) => {
+export const getOrderById = async (
+  orderId
+) => {
   try {
     const response = await axios.get(
       `${URL}/order/${orderId}`
     );
 
     return response.data;
+
   } catch (error) {
-    console.error("Get Order API Error:", error);
+    console.error(
+      "Get Order API Error:",
+      error
+    );
+
     throw error;
   }
 };

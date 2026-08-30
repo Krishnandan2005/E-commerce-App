@@ -1,12 +1,18 @@
 import Stripe from "stripe";
+import Order from "../models/order.models.js";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = new Stripe(
+  process.env.STRIPE_SECRET_KEY
+);
 
 // ======================================================
 // CREATE CHECKOUT SESSION
 // ======================================================
 
-export const createCheckoutSession = async (req, res) => {
+export const createCheckoutSession = async (
+  req,
+  res
+) => {
   try {
     const {
       userId,
@@ -14,9 +20,9 @@ export const createCheckoutSession = async (req, res) => {
       totalAmount,
     } = req.body;
 
-    // --------------------------------------------
+    // ==================================================
     // VALIDATION
-    // --------------------------------------------
+    // ==================================================
 
     if (!userId) {
       return res.status(400).json({
@@ -24,42 +30,52 @@ export const createCheckoutSession = async (req, res) => {
       });
     }
 
-    if (!products || products.length === 0) {
+    if (
+      !products ||
+      !Array.isArray(products) ||
+      products.length === 0
+    ) {
       return res.status(400).json({
         message: "No products found",
       });
     }
 
-    if (!totalAmount || totalAmount <= 0) {
+    if (
+      !totalAmount ||
+      Number(totalAmount) <= 0
+    ) {
       return res.status(400).json({
         message: "Invalid total amount",
       });
     }
 
-    // --------------------------------------------
+    // ==================================================
     // CREATE STRIPE LINE ITEMS
-    // --------------------------------------------
+    // ==================================================
 
     const lineItems = products.map((item) => ({
       price_data: {
         currency: "inr",
 
         product_data: {
-          name: item.title || "Product",
+          name:
+            item.title ||
+            item.shortTitle ||
+            "Product",
         },
 
-        // Stripe expects amount in paise
         unit_amount: Math.round(
           Number(item.price) * 100
         ),
       },
 
-      quantity: Number(item.quantity) || 1,
+      quantity:
+        Number(item.quantity) || 1,
     }));
 
-    // --------------------------------------------
-    // CREATE CHECKOUT SESSION
-    // --------------------------------------------
+    // ==================================================
+    // CREATE STRIPE CHECKOUT SESSION
+    // ==================================================
 
     const session =
       await stripe.checkout.sessions.create({
@@ -69,14 +85,16 @@ export const createCheckoutSession = async (req, res) => {
 
         mode: "payment",
 
-        // Store order information in Stripe
-        // so webhook can use it later.
         metadata: {
           userId: String(userId),
 
-          products: JSON.stringify(products),
+          products: JSON.stringify(
+            products
+          ),
 
-          totalAmount: String(totalAmount),
+          totalAmount: String(
+            totalAmount
+          ),
         },
 
         success_url:
@@ -86,9 +104,14 @@ export const createCheckoutSession = async (req, res) => {
           "https://e-commerce-client-coral-sigma.vercel.app/cart",
       });
 
-    // --------------------------------------------
-    // SEND SESSION ID TO FRONTEND
-    // --------------------------------------------
+    console.log(
+      "Stripe session created:",
+      session.id
+    );
+
+    // ==================================================
+    // SEND SESSION ID
+    // ==================================================
 
     return res.status(200).json({
       id: session.id,
@@ -105,23 +128,27 @@ export const createCheckoutSession = async (req, res) => {
     });
   }
 };
+
 // ======================================================
 // STRIPE WEBHOOK
 // ======================================================
 
-import Order from "../models/order.models.js";
-
-export const stripeWebhooks = async (req, res) => {
-  const signature = req.headers["stripe-signature"];
+export const stripeWebhooks = async (
+  req,
+  res
+) => {
+  const signature =
+    req.headers["stripe-signature"];
 
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(
-      req.body,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
+    event =
+      stripe.webhooks.constructEvent(
+        req.body,
+        signature,
+        process.env.STRIPE_WEBHOOK_SECRET
+      );
   } catch (error) {
     console.error(
       "Webhook signature verification failed:",
@@ -133,13 +160,17 @@ export const stripeWebhooks = async (req, res) => {
     );
   }
 
-  // ====================================================
-  // PAYMENT SUCCESS
-  // ====================================================
+  // ==================================================
+  // CHECKOUT COMPLETED
+  // ==================================================
 
-  if (event.type === "checkout.session.completed") {
+  if (
+    event.type ===
+    "checkout.session.completed"
+  ) {
     try {
-      const session = event.data.object;
+      const session =
+        event.data.object;
 
       const {
         userId,
@@ -147,13 +178,22 @@ export const stripeWebhooks = async (req, res) => {
         totalAmount,
       } = session.metadata;
 
-      if (!userId || !products || !totalAmount) {
+      // ----------------------------------------------
+      // VALIDATE METADATA
+      // ----------------------------------------------
+
+      if (
+        !userId ||
+        !products ||
+        !totalAmount
+      ) {
         console.error(
           "Missing order data in Stripe metadata"
         );
 
         return res.status(400).json({
-          message: "Missing order data",
+          message:
+            "Missing order data",
         });
       }
 
@@ -166,7 +206,8 @@ export const stripeWebhooks = async (req, res) => {
 
       const existingOrder =
         await Order.findOne({
-          stripeSessionId: session.id,
+          stripeSessionId:
+            session.id,
         });
 
       if (existingOrder) {
@@ -187,17 +228,23 @@ export const stripeWebhooks = async (req, res) => {
       const order = new Order({
         userId,
 
-        orderId: `QC${Date.now()}`,
+        orderId:
+          `QC${Date.now()}`,
 
-        stripeSessionId: session.id,
+        stripeSessionId:
+          session.id,
 
-        products: parsedProducts,
+        products:
+          parsedProducts,
 
-        totalAmount: Number(totalAmount),
+        totalAmount:
+          Number(totalAmount),
 
-        paymentStatus: "Paid",
+        paymentStatus:
+          "Paid",
 
-        orderStatus: "Processing",
+        orderStatus:
+          "Processing",
       });
 
       await order.save();
@@ -206,6 +253,7 @@ export const stripeWebhooks = async (req, res) => {
         "Order created successfully:",
         order.orderId
       );
+
     } catch (error) {
       console.error(
         "Create Order From Webhook Error:",

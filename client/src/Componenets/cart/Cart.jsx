@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import {
   Box,
   Typography,
@@ -17,9 +17,15 @@ import {
   removeFromCart,
 } from "../../redux/actions/cartActions";
 
+import { DataContext } from "../../context/DataProvider";
+
 import TotalAmount from "./TotalAmount";
 import EmptyCart from "./EmptyCart";
 import CartItem from "./CartItem";
+
+// ======================================================
+// STYLES
+// ======================================================
 
 const Component = styled(Grid)(({ theme }) => ({
   padding: "30px 135px",
@@ -63,13 +69,25 @@ const StyledButton = styled(Button)`
   }
 `;
 
+// ======================================================
+// STRIPE
+// ======================================================
+
 const stripePromise = loadStripe(
   import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
 );
 
+// ======================================================
+// CART
+// ======================================================
+
 const Cart = () => {
   const { cartItems } = useSelector(
     (state) => state.cart
+  );
+
+  const { account } = useContext(
+    DataContext
   );
 
   const { id } = useParams();
@@ -83,11 +101,17 @@ const Cart = () => {
   useEffect(() => {
     if (
       id &&
-      !cartItems.some((item) => item.id === id)
+      !cartItems.some(
+        (item) => item.id === id
+      )
     ) {
       dispatch(addToCart(id, 1));
     }
-  }, [dispatch, id, cartItems]);
+  }, [
+    dispatch,
+    id,
+    cartItems,
+  ]);
 
   // ======================================================
   // REMOVE ITEM
@@ -112,15 +136,22 @@ const Cart = () => {
           item.quantity || 1
         );
 
-        return total + price * quantity;
+        return (
+          total +
+          price * quantity
+        );
       },
       0
     );
 
+    // Free delivery above ₹500
     const deliveryCharge =
       totalCost > 500 ? 0 : 40;
 
-    return totalCost + deliveryCharge;
+    return (
+      totalCost +
+      deliveryCharge
+    );
   };
 
   // ======================================================
@@ -129,36 +160,189 @@ const Cart = () => {
 
   const buyNow = async () => {
     try {
-      const totalAmount = calculateTotal();
+      // --------------------------------------------------
+      // CHECK LOGIN
+      // --------------------------------------------------
 
-      console.log(
-        "Order total:",
-        totalAmount
-      );
-
-      const session =
-        await createCheckoutSession(
-          totalAmount
-        );
-
-      const stripe = await stripePromise;
-
-      if (!stripe) {
-        console.error(
-          "Stripe failed to load"
+      if (!account?._id) {
+        alert(
+          "Please login before placing an order."
         );
         return;
       }
 
-      await stripe.redirectToCheckout({
-        sessionId: session.id,
-      });
+      // --------------------------------------------------
+      // CHECK CART
+      // --------------------------------------------------
+
+      if (!cartItems.length) {
+        alert("Your cart is empty.");
+        return;
+      }
+
+      // --------------------------------------------------
+      // CALCULATE TOTAL
+      // --------------------------------------------------
+
+      const totalAmount =
+        calculateTotal();
+
+      // --------------------------------------------------
+      // PREPARE PRODUCTS
+      // --------------------------------------------------
+
+      const products =
+        cartItems.map((item) => ({
+          productId: item.id,
+
+          title:
+            item.title?.longTitle ||
+            item.title?.shortTitle ||
+            "Product",
+
+          image: item.url || "",
+
+          quantity:
+            Number(
+              item.quantity || 1
+            ),
+
+          price:
+            Number(
+              item.price?.cost || 0
+            ),
+
+          mrp:
+            Number(
+              item.price?.mrp || 0
+            ),
+        }));
+
+      // --------------------------------------------------
+      // CHECK PRODUCT DATA
+      // --------------------------------------------------
+
+      if (!products.length) {
+        alert(
+          "No products found in cart."
+        );
+        return;
+      }
+
+      // --------------------------------------------------
+      // DATA SENT TO BACKEND
+      // --------------------------------------------------
+
+      const orderData = {
+        userId: account._id,
+
+        products,
+
+        totalAmount,
+      };
+
+      console.log(
+        "================================"
+      );
+
+      console.log(
+        "Checkout Order Data:",
+        orderData
+      );
+
+      console.log(
+        "User ID:",
+        account._id
+      );
+
+      console.log(
+        "Total Amount:",
+        totalAmount
+      );
+
+      console.log(
+        "Products:",
+        products
+      );
+
+      console.log(
+        "================================"
+      );
+
+      // --------------------------------------------------
+      // CREATE STRIPE SESSION
+      // --------------------------------------------------
+
+      const session =
+        await createCheckoutSession(
+          orderData
+        );
+
+      console.log(
+        "Stripe Session:",
+        session
+      );
+
+      if (!session?.id) {
+        console.error(
+          "Stripe session ID missing."
+        );
+
+        alert(
+          "Unable to create payment session."
+        );
+
+        return;
+      }
+
+      // --------------------------------------------------
+      // LOAD STRIPE
+      // --------------------------------------------------
+
+      const stripe =
+        await stripePromise;
+
+      if (!stripe) {
+        console.error(
+          "Stripe failed to load."
+        );
+
+        return;
+      }
+
+      // --------------------------------------------------
+      // REDIRECT TO STRIPE
+      // --------------------------------------------------
+
+      const result =
+        await stripe.redirectToCheckout({
+          sessionId: session.id,
+        });
+
+      if (result?.error) {
+        console.error(
+          "Stripe redirect error:",
+          result.error
+        );
+      }
 
     } catch (error) {
       console.error(
-        "Checkout error:",
+        "Checkout Error:",
         error
       );
+
+      if (error.response) {
+        console.error(
+          "Server Status:",
+          error.response.status
+        );
+
+        console.error(
+          "Server Response:",
+          error.response.data
+        );
+      }
     }
   };
 
@@ -175,7 +359,10 @@ const Cart = () => {
   // ======================================================
 
   return (
-    <Component container spacing={2}>
+    <Component
+      container
+      spacing={2}
+    >
 
       {/* ==================================================
           LEFT SIDE
@@ -190,6 +377,8 @@ const Cart = () => {
         }}
       >
 
+        {/* CART HEADER */}
+
         <Header>
           <Typography
             sx={{
@@ -201,6 +390,8 @@ const Cart = () => {
           </Typography>
         </Header>
 
+        {/* CART ITEMS */}
+
         {cartItems.map((item) => (
           <CartItem
             key={item.id}
@@ -211,9 +402,7 @@ const Cart = () => {
           />
         ))}
 
-        {/* ==================================================
-            PLACE ORDER
-        ================================================== */}
+        {/* PLACE ORDER */}
 
         <BottomWrapper>
           <StyledButton
@@ -227,7 +416,7 @@ const Cart = () => {
       </LeftComponent>
 
       {/* ==================================================
-          RIGHT SIDE
+          RIGHT SIDE - TOTAL
       ================================================== */}
 
       <Grid
