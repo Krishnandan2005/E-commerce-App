@@ -4,22 +4,29 @@ import defaultData from "./default.js";
 import "dotenv/config";
 import router from "./routes/routes.js";
 import cors from "cors";
-import bodyParser from "body-parser";
 
 import { stripeWebhooks } from "./controllers/payment.controller.js";
 
 const app = express();
 
+// ======================================================
+// CORS
+// ======================================================
+
 app.use(cors());
 
 // ======================================================
 // STRIPE WEBHOOK
-// IMPORTANT: Must come BEFORE bodyParser.json()
+// IMPORTANT:
+// Webhook must come BEFORE express.json()
+// because Stripe requires the raw request body.
 // ======================================================
 
 app.post(
   "/stripe/webhook",
-  express.raw({ type: "application/json" }),
+  express.raw({
+    type: "application/json",
+  }),
   stripeWebhooks
 );
 
@@ -27,11 +34,18 @@ app.post(
 // BODY PARSER
 // ======================================================
 
-app.use(bodyParser.json({ extended: true }));
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  express.json()
+);
+
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 
 // ======================================================
-// ROUTES
+// NORMAL API ROUTES
 // ======================================================
 
 app.use("/", router);
@@ -44,15 +58,19 @@ await connectDB();
 await defaultData();
 
 // ======================================================
-// SERVER
+// START SERVER
 // ======================================================
 
 if (!process.env.VERCEL) {
-  const PORT = process.env.PORT || 3000;
+  const PORT =
+    process.env.PORT || 3000;
 
   app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(
+      `Server running on port ${PORT}`
+    );
   });
 }
+
 
 export default app;

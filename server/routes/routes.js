@@ -1,9 +1,17 @@
 import express from "express";
 
+// ======================================================
+// USER CONTROLLER
+// ======================================================
+
 import {
   userSignup,
   userLogin,
 } from "../controllers/user.controller.js";
+
+// ======================================================
+// PRODUCT CONTROLLER
+// ======================================================
 
 import {
   getProducts,
@@ -14,16 +22,26 @@ import {
   deleteSellerProduct,
 } from "../controllers/product.controller.js";
 
+// ======================================================
+// PAYMENT CONTROLLER
+// ======================================================
+
 import {
   createCheckoutSession,
-  stripeWebhooks,
 } from "../controllers/payment.controller.js";
 
-// Seller
+// ======================================================
+// SELLER CONTROLLER
+// ======================================================
+
 import {
   sellerSignup,
   sellerLogin,
 } from "../controllers/seller.controller.js";
+
+// ======================================================
+// ORDER CONTROLLER
+// ======================================================
 
 import {
   createOrder,
@@ -37,24 +55,37 @@ const router = express.Router();
 // USER
 // ======================================================
 
-router.post("/signup", userSignup);
+router.post(
+  "/signup",
+  userSignup
+);
 
-router.post("/login", userLogin);
+router.post(
+  "/login",
+  userLogin
+);
 
 // ======================================================
 // PRODUCTS
 // ======================================================
 
 // Get all products
-router.get("/products", getProducts);
+router.get(
+  "/products",
+  getProducts
+);
 
 // Get single product
-router.get("/product/:id", getProductById);
+router.get(
+  "/product/:id",
+  getProductById
+);
 
 // ======================================================
 // PAYMENT
 // ======================================================
 
+// Create Stripe checkout session
 router.post(
   "/create-checkout-session",
   createCheckoutSession
@@ -65,22 +96,28 @@ router.post(
 // ======================================================
 
 // Seller signup
-router.post("/seller/signup", sellerSignup);
+router.post(
+  "/seller/signup",
+  sellerSignup
+);
 
 // Seller login
-router.post("/seller/login", sellerLogin);
+router.post(
+  "/seller/login",
+  sellerLogin
+);
 
 // ======================================================
 // SELLER PRODUCTS
 // ======================================================
 
-// Add product
+// Add seller product
 router.post(
   "/seller/products",
   addSellerProduct
 );
 
-// Get seller's products
+// Get seller products
 router.get(
   "/seller/products/:sellerId",
   getSellerProducts
@@ -102,10 +139,22 @@ router.delete(
 // ORDERS
 // ======================================================
 
-router.post("/orders", createOrder);
+// Create order manually
+router.post(
+  "/orders",
+  createOrder
+);
 
-router.get("/orders/:userId", getUserOrders);
+// Get user's orders
+router.get(
+  "/orders/:userId",
+  getUserOrders
+);
 
-router.get("/order/:id", getOrderById);
+// Get single order
+router.get(
+  "/order/:id",
+  getOrderById
+);
 
 export default router;
