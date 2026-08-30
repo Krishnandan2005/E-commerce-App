@@ -14,6 +14,12 @@ const orderSchema = new mongoose.Schema(
       unique: true,
     },
 
+    stripeSessionId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+
     products: [
       {
         productId: {
