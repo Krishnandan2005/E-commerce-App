@@ -1,35 +1,46 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 
 export const DataContext = createContext(null);
 
 const DataProvider = ({ children }) => {
-    const [account, setAccount] = useState(() => {
-        const savedUser = localStorage.getItem("quickcart_user");
+  const [account, setAccount] = useState(() => {
+    const savedAccount = localStorage.getItem("account");
 
-        return savedUser ? JSON.parse(savedUser) : null;
-    });
+    if (savedAccount) {
+      try {
+        return JSON.parse(savedAccount);
+      } catch (error) {
+        console.error("Invalid saved account:", error);
+        localStorage.removeItem("account");
+      }
+    }
 
-    useEffect(() => {
-        if (account) {
-            localStorage.setItem(
-                "quickcart_user",
-                JSON.stringify(account)
-            );
-        } else {
-            localStorage.removeItem("quickcart_user");
-        }
-    }, [account]);
+    return null;
+  });
 
-    return (
-        <DataContext.Provider
-            value={{
-                account,
-                setAccount,
-            }}
-        >
-            {children}
-        </DataContext.Provider>
-    );
+  const handleSetAccount = (user) => {
+    setAccount(user);
+
+    if (user) {
+      localStorage.setItem(
+        "account",
+        JSON.stringify(user)
+      );
+    } else {
+      localStorage.removeItem("account");
+    }
+  };
+
+  return (
+    <DataContext.Provider
+      value={{
+        account,
+        setAccount: handleSetAccount,
+      }}
+    >
+      {children}
+    </DataContext.Provider>
+  );
 };
 
 export default DataProvider;
