@@ -39,6 +39,8 @@ const AddProduct = () => {
 
   const seller = JSON.parse(localStorage.getItem("seller"));
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const [product, setProduct] = useState({
     url: "",
     detailUrl: "",
@@ -69,7 +71,9 @@ const AddProduct = () => {
     e.preventDefault();
 
     if (!seller?.id) {
-      setError("Seller login session not found. Please login again.");
+      setError(
+        "Seller login session not found. Please login again."
+      );
       return;
     }
 
@@ -78,7 +82,7 @@ const AddProduct = () => {
       setError("");
 
       const response = await axios.post(
-        "http://localhost:3000/seller/products",
+        `${API_URL}/seller/products`,
         {
           sellerId: seller.id,
 
@@ -172,7 +176,6 @@ const AddProduct = () => {
           onSubmit={handleSubmit}
         >
           <FormGrid>
-            {/* IMAGE URL */}
             <TextField
               fullWidth
               label="Product Image URL"
@@ -182,7 +185,6 @@ const AddProduct = () => {
               required
             />
 
-            {/* DETAIL URL */}
             <TextField
               fullWidth
               label="Product Detail URL"
@@ -191,7 +193,6 @@ const AddProduct = () => {
               onChange={handleChange}
             />
 
-            {/* SHORT TITLE */}
             <TextField
               fullWidth
               label="Short Title"
@@ -201,7 +202,6 @@ const AddProduct = () => {
               required
             />
 
-            {/* LONG TITLE */}
             <TextField
               fullWidth
               label="Long Title"
@@ -211,7 +211,6 @@ const AddProduct = () => {
               required
             />
 
-            {/* CATEGORY */}
             <TextField
               select
               fullWidth
@@ -254,7 +253,6 @@ const AddProduct = () => {
               </MenuItem>
             </TextField>
 
-            {/* MRP */}
             <TextField
               fullWidth
               label="MRP"
@@ -265,7 +263,6 @@ const AddProduct = () => {
               required
             />
 
-            {/* COST */}
             <TextField
               fullWidth
               label="Selling Price"
@@ -276,7 +273,6 @@ const AddProduct = () => {
               required
             />
 
-            {/* DISCOUNT */}
             <TextField
               fullWidth
               label="Discount"
@@ -286,7 +282,6 @@ const AddProduct = () => {
               placeholder="20% off"
             />
 
-            {/* QUANTITY */}
             <TextField
               fullWidth
               label="Quantity"
@@ -297,7 +292,6 @@ const AddProduct = () => {
               required
             />
 
-            {/* TAGLINE */}
             <TextField
               fullWidth
               label="Tagline"
@@ -308,7 +302,6 @@ const AddProduct = () => {
             />
           </FormGrid>
 
-          {/* DESCRIPTION */}
           <TextField
             fullWidth
             multiline
@@ -320,7 +313,6 @@ const AddProduct = () => {
             sx={{ mt: 2 }}
           />
 
-          {/* BUTTONS */}
           <Box
             sx={{
               display: "flex",
