@@ -13,11 +13,17 @@ import {
   TextField,
   MenuItem,
 } from "@mui/material";
+
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
+// ======================================================
+// STYLES
+// ======================================================
 
 const Container = styled(Box)`
   min-height: calc(100vh - 55px);
@@ -93,10 +99,28 @@ const FormGrid = styled(Box)`
   }
 `;
 
+// ======================================================
+// COMPONENT
+// ======================================================
+
 const ManageProducts = () => {
   const navigate = useNavigate();
 
+  // ======================================================
+  // API URL
+  // ======================================================
+
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  // ======================================================
+  // SELLER
+  // ======================================================
+
   const seller = JSON.parse(localStorage.getItem("seller"));
+
+  // ======================================================
+  // STATES
+  // ======================================================
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -131,7 +155,7 @@ const ManageProducts = () => {
       setLoading(true);
 
       const response = await axios.get(
-        `http://localhost:3000/seller/products/${seller.id}`
+        `${API_URL}/seller/products/${seller.id}`
       );
 
       setProducts(response.data);
@@ -144,6 +168,10 @@ const ManageProducts = () => {
       setLoading(false);
     }
   };
+
+  // ======================================================
+  // FETCH PRODUCTS ON PAGE LOAD
+  // ======================================================
 
   useEffect(() => {
     fetchProducts();
@@ -164,7 +192,7 @@ const ManageProducts = () => {
 
     try {
       await axios.delete(
-        `http://localhost:3000/seller/products/${productId}`,
+        `${API_URL}/seller/products/${productId}`,
         {
           data: {
             sellerId: seller.id,
@@ -254,7 +282,7 @@ const ManageProducts = () => {
   const handleUpdate = async () => {
     try {
       await axios.put(
-        `http://localhost:3000/seller/products/${selectedProduct.id}`,
+        `${API_URL}/seller/products/${selectedProduct.id}`,
         {
           sellerId: seller.id,
 
@@ -325,9 +353,16 @@ const ManageProducts = () => {
     );
   }
 
+  // ======================================================
+  // UI
+  // ======================================================
+
   return (
     <Container>
-      {/* HEADER */}
+
+      {/* ==================================================
+          HEADER
+      ================================================== */}
 
       <Header>
         <Box>
@@ -366,7 +401,9 @@ const ManageProducts = () => {
         </Button>
       </Header>
 
-      {/* LOADING */}
+      {/* ==================================================
+          LOADING
+      ================================================== */}
 
       {loading ? (
         <Paper
@@ -382,8 +419,12 @@ const ManageProducts = () => {
             Loading your products...
           </Typography>
         </Paper>
+
       ) : products.length === 0 ? (
-        /* EMPTY */
+
+        /* ==================================================
+           EMPTY
+        ================================================== */
 
         <Paper
           sx={{
@@ -394,7 +435,9 @@ const ManageProducts = () => {
         >
           <Typography
             variant="h6"
-            sx={{ fontWeight: 600 }}
+            sx={{
+              fontWeight: 600,
+            }}
           >
             No products found
           </Typography>
@@ -425,8 +468,12 @@ const ManageProducts = () => {
             Add Your First Product
           </Button>
         </Paper>
+
       ) : (
-        /* PRODUCTS */
+
+        /* ==================================================
+           PRODUCTS
+        ================================================== */
 
         <ProductGrid>
           {products.map((product) => (
@@ -487,6 +534,9 @@ const ManageProducts = () => {
               </Typography>
 
               <ActionBox>
+
+                {/* EDIT */}
+
                 <Button
                   fullWidth
                   variant="outlined"
@@ -500,6 +550,8 @@ const ManageProducts = () => {
                 >
                   Edit
                 </Button>
+
+                {/* DELETE */}
 
                 <Button
                   fullWidth
@@ -515,6 +567,7 @@ const ManageProducts = () => {
                 >
                   Delete
                 </Button>
+
               </ActionBox>
             </ProductCard>
           ))}
@@ -531,6 +584,7 @@ const ManageProducts = () => {
         fullWidth
         maxWidth="md"
       >
+
         <DialogTitle
           sx={{
             fontWeight: 700,
@@ -540,7 +594,11 @@ const ManageProducts = () => {
         </DialogTitle>
 
         <DialogContent>
+
           <FormGrid sx={{ mt: 1 }}>
+
+            {/* IMAGE URL */}
+
             <TextField
               label="Product Image URL"
               name="url"
@@ -548,6 +606,8 @@ const ManageProducts = () => {
               onChange={handleEditChange}
               fullWidth
             />
+
+            {/* DETAIL URL */}
 
             <TextField
               label="Product Detail URL"
@@ -557,6 +617,8 @@ const ManageProducts = () => {
               fullWidth
             />
 
+            {/* SHORT TITLE */}
+
             <TextField
               label="Short Title"
               name="shortTitle"
@@ -565,6 +627,8 @@ const ManageProducts = () => {
               fullWidth
             />
 
+            {/* LONG TITLE */}
+
             <TextField
               label="Long Title"
               name="longTitle"
@@ -572,6 +636,8 @@ const ManageProducts = () => {
               onChange={handleEditChange}
               fullWidth
             />
+
+            {/* CATEGORY */}
 
             <TextField
               select
@@ -614,6 +680,8 @@ const ManageProducts = () => {
               </MenuItem>
             </TextField>
 
+            {/* MRP */}
+
             <TextField
               label="MRP"
               name="mrp"
@@ -622,6 +690,8 @@ const ManageProducts = () => {
               onChange={handleEditChange}
               fullWidth
             />
+
+            {/* SELLING PRICE */}
 
             <TextField
               label="Selling Price"
@@ -632,6 +702,8 @@ const ManageProducts = () => {
               fullWidth
             />
 
+            {/* DISCOUNT */}
+
             <TextField
               label="Discount"
               name="discount"
@@ -639,6 +711,8 @@ const ManageProducts = () => {
               onChange={handleEditChange}
               fullWidth
             />
+
+            {/* QUANTITY */}
 
             <TextField
               label="Quantity"
@@ -649,6 +723,8 @@ const ManageProducts = () => {
               fullWidth
             />
 
+            {/* TAGLINE */}
+
             <TextField
               label="Tagline"
               name="tagline"
@@ -656,7 +732,10 @@ const ManageProducts = () => {
               onChange={handleEditChange}
               fullWidth
             />
+
           </FormGrid>
+
+          {/* DESCRIPTION */}
 
           <TextField
             label="Description"
@@ -668,9 +747,15 @@ const ManageProducts = () => {
             rows={4}
             sx={{ mt: 2 }}
           />
+
         </DialogContent>
 
+        {/* ==================================================
+            DIALOG ACTIONS
+        ================================================== */}
+
         <DialogActions sx={{ padding: 2 }}>
+
           <Button
             onClick={handleEditClose}
             sx={{
@@ -693,8 +778,11 @@ const ManageProducts = () => {
           >
             Update Product
           </Button>
+
         </DialogActions>
+
       </Dialog>
+
     </Container>
   );
 };

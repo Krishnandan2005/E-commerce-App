@@ -95,7 +95,7 @@ const SellerDashboard = () => {
         }
 
         const response = await axios.get(
-          `http://localhost:3000/seller/products/${seller.id}`
+          `${import.meta.env.VITE_API_URL}/seller/products/${seller.id}`
         );
 
         setProductCount(response.data.length);
@@ -155,6 +155,10 @@ const SellerDashboard = () => {
       </Container>
     );
   }
+
+  // ======================================================
+  // DASHBOARD
+  // ======================================================
 
   return (
     <Container>
