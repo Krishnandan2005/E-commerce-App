@@ -2,19 +2,11 @@ import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
   {
-    // ======================================================
-    // USER
-    // ======================================================
-
     userId: {
       type: String,
       required: true,
       index: true,
     },
-
-    // ======================================================
-    // ORDER ID
-    // ======================================================
 
     orderId: {
       type: String,
@@ -22,19 +14,13 @@ const orderSchema = new mongoose.Schema(
       unique: true,
     },
 
-    // ======================================================
-    // STRIPE SESSION ID
-    // ======================================================
-
+    // Stripe session is created AFTER the order.
+    // Therefore it is optional initially.
     stripeSessionId: {
       type: String,
       unique: true,
       sparse: true,
     },
-
-    // ======================================================
-    // PRODUCTS
-    // ======================================================
 
     products: [
       {
@@ -69,32 +55,16 @@ const orderSchema = new mongoose.Schema(
       },
     ],
 
-    // ======================================================
-    // TOTAL AMOUNT
-    // ======================================================
-
     totalAmount: {
       type: Number,
       required: true,
     },
 
-    // ======================================================
-    // PAYMENT STATUS
-    // ======================================================
-
     paymentStatus: {
       type: String,
-      enum: [
-        "Pending",
-        "Paid",
-        "Failed",
-      ],
+      enum: ["Pending", "Paid", "Failed"],
       default: "Pending",
     },
-
-    // ======================================================
-    // ORDER STATUS
-    // ======================================================
 
     orderStatus: {
       type: String,
@@ -113,9 +83,6 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
-const Order = mongoose.model(
-  "Order",
-  orderSchema
-);
+const Order = mongoose.model("Order", orderSchema);
 
 export default Order;

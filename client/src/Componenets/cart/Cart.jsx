@@ -9,9 +9,14 @@ import {
 
 import { useParams } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
-import { createCheckoutSession } from "../../service/api";
+
+import {
+  createOrder,
+  createCheckoutSession,
+} from "../../service/api";
 
 import { useSelector, useDispatch } from "react-redux";
+
 import {
   addToCart,
   removeFromCart,
@@ -86,9 +91,7 @@ const Cart = () => {
     (state) => state.cart
   );
 
-  const { account } = useContext(
-    DataContext
-  );
+  const { account } = useContext(DataContext);
 
   const { id } = useParams();
 
@@ -122,7 +125,7 @@ const Cart = () => {
   };
 
   // ======================================================
-  // CALCULATE CART TOTAL
+  // CALCULATE TOTAL
   // ======================================================
 
   const calculateTotal = () => {
@@ -187,6 +190,11 @@ const Cart = () => {
       const totalAmount =
         calculateTotal();
 
+      if (totalAmount <= 0) {
+        alert("Invalid order amount.");
+        return;
+      }
+
       // --------------------------------------------------
       // PREPARE PRODUCTS
       // --------------------------------------------------
@@ -200,7 +208,10 @@ const Cart = () => {
             item.title?.shortTitle ||
             "Product",
 
-          image: item.url || "",
+          image:
+            item.detailUrl ||
+            item.url ||
+            "",
 
           quantity:
             Number(
@@ -219,7 +230,7 @@ const Cart = () => {
         }));
 
       // --------------------------------------------------
-      // CHECK PRODUCT DATA
+      // VALIDATE PRODUCTS
       // --------------------------------------------------
 
       if (!products.length) {
@@ -230,7 +241,8 @@ const Cart = () => {
       }
 
       // --------------------------------------------------
-      // DATA SENT TO BACKEND
+      // STEP 1:
+      // CREATE ORDER IN MONGODB
       // --------------------------------------------------
 
       const orderData = {
@@ -239,43 +251,74 @@ const Cart = () => {
         products,
 
         totalAmount,
+
+        paymentStatus: "Pending",
+
+        orderStatus: "Processing",
       };
 
       console.log(
-        "================================"
-      );
-
-      console.log(
-        "Checkout Order Data:",
+        "Creating order in MongoDB:",
         orderData
       );
 
-      console.log(
-        "User ID:",
-        account._id
-      );
+      const orderResponse =
+        await createOrder(
+          orderData
+        );
 
       console.log(
-        "Total Amount:",
-        totalAmount
-      );
-
-      console.log(
-        "Products:",
-        products
-      );
-
-      console.log(
-        "================================"
+        "MongoDB Order Response:",
+        orderResponse
       );
 
       // --------------------------------------------------
-      // CREATE STRIPE SESSION
+      // GET CREATED ORDER ID
       // --------------------------------------------------
+
+      const orderId =
+        orderResponse?.order?.orderId;
+
+      if (!orderId) {
+        console.error(
+          "Order ID was not returned by backend."
+        );
+
+        alert(
+          "Unable to create order."
+        );
+
+        return;
+      }
+
+      console.log(
+        "MongoDB Order Created:",
+        orderId
+      );
+
+      // --------------------------------------------------
+      // STEP 2:
+      // CREATE STRIPE CHECKOUT SESSION
+      // --------------------------------------------------
+
+      const checkoutData = {
+        userId: account._id,
+
+        products,
+
+        totalAmount,
+
+        orderId,
+      };
+
+      console.log(
+        "Creating Stripe session:",
+        checkoutData
+      );
 
       const session =
         await createCheckoutSession(
-          orderData
+          checkoutData
         );
 
       console.log(
@@ -283,19 +326,24 @@ const Cart = () => {
         session
       );
 
+      // --------------------------------------------------
+      // CHECK SESSION
+      // --------------------------------------------------
+
       if (!session?.id) {
         console.error(
           "Stripe session ID missing."
         );
 
         alert(
-          "Unable to create payment session."
+          "Order was created, but payment session could not be created."
         );
 
         return;
       }
 
       // --------------------------------------------------
+      // STEP 3:
       // LOAD STRIPE
       // --------------------------------------------------
 
@@ -307,10 +355,15 @@ const Cart = () => {
           "Stripe failed to load."
         );
 
+        alert(
+          "Unable to load payment gateway."
+        );
+
         return;
       }
 
       // --------------------------------------------------
+      // STEP 4:
       // REDIRECT TO STRIPE
       // --------------------------------------------------
 
@@ -324,11 +377,16 @@ const Cart = () => {
           "Stripe redirect error:",
           result.error
         );
+
+        alert(
+          result.error.message ||
+            "Unable to open payment gateway."
+        );
       }
 
     } catch (error) {
       console.error(
-        "Checkout Error:",
+        "Place Order Error:",
         error
       );
 
@@ -341,6 +399,15 @@ const Cart = () => {
         console.error(
           "Server Response:",
           error.response.data
+        );
+
+        alert(
+          error.response.data?.message ||
+            "Unable to place order."
+        );
+      } else {
+        alert(
+          "Something went wrong while placing the order."
         );
       }
     }
@@ -363,7 +430,6 @@ const Cart = () => {
       container
       spacing={2}
     >
-
       {/* ==================================================
           LEFT SIDE
       ================================================== */}
@@ -376,7 +442,6 @@ const Cart = () => {
           lg: 9,
         }}
       >
-
         {/* CART HEADER */}
 
         <Header>
@@ -412,11 +477,10 @@ const Cart = () => {
             Place Order
           </StyledButton>
         </BottomWrapper>
-
       </LeftComponent>
 
       {/* ==================================================
-          RIGHT SIDE - TOTAL
+          RIGHT SIDE
       ================================================== */}
 
       <Grid
@@ -431,7 +495,6 @@ const Cart = () => {
           cartItems={cartItems}
         />
       </Grid>
-
     </Component>
   );
 };

@@ -9,15 +9,13 @@ const stripe = new Stripe(
 // CREATE CHECKOUT SESSION
 // ======================================================
 
-export const createCheckoutSession = async (
-  req,
-  res
-) => {
+export const createCheckoutSession = async (req, res) => {
   try {
     const {
       userId,
       products,
       totalAmount,
+      orderId,
     } = req.body;
 
     // ==================================================
@@ -46,6 +44,26 @@ export const createCheckoutSession = async (
     ) {
       return res.status(400).json({
         message: "Invalid total amount",
+      });
+    }
+
+    if (!orderId) {
+      return res.status(400).json({
+        message: "Order ID is required",
+      });
+    }
+
+    // ==================================================
+    // CHECK WHETHER ORDER EXISTS
+    // ==================================================
+
+    const existingOrder = await Order.findOne({
+      orderId,
+    });
+
+    if (!existingOrder) {
+      return res.status(404).json({
+        message: "Order not found",
       });
     }
 
@@ -88,13 +106,7 @@ export const createCheckoutSession = async (
         metadata: {
           userId: String(userId),
 
-          products: JSON.stringify(
-            products
-          ),
-
-          totalAmount: String(
-            totalAmount
-          ),
+          orderId: String(orderId),
         },
 
         success_url:
@@ -104,9 +116,23 @@ export const createCheckoutSession = async (
           "https://e-commerce-client-coral-sigma.vercel.app/cart",
       });
 
+    // ==================================================
+    // SAVE STRIPE SESSION ID TO EXISTING ORDER
+    // ==================================================
+
+    existingOrder.stripeSessionId =
+      session.id;
+
+    await existingOrder.save();
+
     console.log(
       "Stripe session created:",
       session.id
+    );
+
+    console.log(
+      "Order connected to Stripe:",
+      orderId
     );
 
     // ==================================================
@@ -115,6 +141,7 @@ export const createCheckoutSession = async (
 
     return res.status(200).json({
       id: session.id,
+      orderId,
     });
 
   } catch (error) {
@@ -133,14 +160,15 @@ export const createCheckoutSession = async (
 // STRIPE WEBHOOK
 // ======================================================
 
-export const stripeWebhooks = async (
-  req,
-  res
-) => {
+export const stripeWebhooks = async (req, res) => {
   const signature =
     req.headers["stripe-signature"];
 
   let event;
+
+  // ==================================================
+  // VERIFY STRIPE WEBHOOK
+  // ==================================================
 
   try {
     event =
@@ -161,7 +189,7 @@ export const stripeWebhooks = async (
   }
 
   // ==================================================
-  // CHECKOUT COMPLETED
+  // PAYMENT SUCCESS
   // ==================================================
 
   if (
@@ -173,90 +201,66 @@ export const stripeWebhooks = async (
         event.data.object;
 
       const {
+        orderId,
         userId,
-        products,
-        totalAmount,
-      } = session.metadata;
+      } = session.metadata || {};
 
       // ----------------------------------------------
       // VALIDATE METADATA
       // ----------------------------------------------
 
-      if (
-        !userId ||
-        !products ||
-        !totalAmount
-      ) {
+      if (!orderId || !userId) {
         console.error(
-          "Missing order data in Stripe metadata"
+          "Missing orderId or userId in Stripe metadata"
         );
 
         return res.status(400).json({
           message:
-            "Missing order data",
+            "Missing order information",
         });
       }
 
-      const parsedProducts =
-        JSON.parse(products);
-
       // ----------------------------------------------
-      // PREVENT DUPLICATE ORDER
+      // FIND EXISTING ORDER
       // ----------------------------------------------
 
-      const existingOrder =
+      const order =
         await Order.findOne({
-          stripeSessionId:
-            session.id,
+          orderId,
         });
 
-      if (existingOrder) {
-        console.log(
-          "Order already exists:",
-          existingOrder.orderId
+      if (!order) {
+        console.error(
+          "Order not found:",
+          orderId
         );
 
-        return res.status(200).json({
-          received: true,
+        return res.status(404).json({
+          message: "Order not found",
         });
       }
 
       // ----------------------------------------------
-      // CREATE ORDER
+      // UPDATE ORDER
       // ----------------------------------------------
 
-      const order = new Order({
-        userId,
+      order.paymentStatus = "Paid";
 
-        orderId:
-          `QC${Date.now()}`,
+      order.orderStatus = "Processing";
 
-        stripeSessionId:
-          session.id,
-
-        products:
-          parsedProducts,
-
-        totalAmount:
-          Number(totalAmount),
-
-        paymentStatus:
-          "Paid",
-
-        orderStatus:
-          "Processing",
-      });
+      order.stripeSessionId =
+        session.id;
 
       await order.save();
 
       console.log(
-        "Order created successfully:",
+        "Order payment updated successfully:",
         order.orderId
       );
 
     } catch (error) {
       console.error(
-        "Create Order From Webhook Error:",
+        "Update Order From Webhook Error:",
         error
       );
 
@@ -265,6 +269,10 @@ export const stripeWebhooks = async (
       });
     }
   }
+
+  // ==================================================
+  // WEBHOOK RESPONSE
+  // ==================================================
 
   return res.status(200).json({
     received: true,

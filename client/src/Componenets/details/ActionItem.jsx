@@ -11,7 +11,15 @@ import { DataContext } from "../../context/DataProvider";
 import LoginDialog from "../Login/LoginDialog";
 
 import { loadStripe } from "@stripe/stripe-js";
-import { createCheckoutSession } from "../../service/api";
+
+import {
+  createOrder,
+  createCheckoutSession,
+} from "../../service/api";
+
+// ======================================================
+// STYLES
+// ======================================================
 
 const LeftContainer = styled(Box)(({ theme }) => ({
   minWidth: "40%",
@@ -52,15 +60,25 @@ const stripePromise = loadStripe(
   import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
 );
 
+// ======================================================
+// ACTION ITEM
+// ======================================================
+
 function ActionItem({ product }) {
   const [quantity] = useState(1);
-  const [loginOpen, setLoginOpen] = useState(false);
-  const [pendingAction, setPendingAction] = useState(null);
+
+  const [loginOpen, setLoginOpen] =
+    useState(false);
+
+  const [pendingAction, setPendingAction] =
+    useState(null);
 
   const navigate = useNavigate();
+
   const dispatch = useDispatch();
 
-  const { account } = useContext(DataContext);
+  const { account } =
+    useContext(DataContext);
 
   // ======================================================
   // ADD TO CART
@@ -68,7 +86,9 @@ function ActionItem({ product }) {
 
   const handleAddToCart = () => {
     if (!product?.id) {
-      console.error("Product ID is missing");
+      console.error(
+        "Product ID is missing"
+      );
       return;
     }
 
@@ -79,7 +99,6 @@ function ActionItem({ product }) {
       return;
     }
 
-    // Add product to cart
     dispatch(
       addToCart(
         product.id,
@@ -96,7 +115,9 @@ function ActionItem({ product }) {
 
   const handleBuyNow = async () => {
     if (!product?.id) {
-      console.error("Product ID is missing");
+      console.error(
+        "Product ID is missing"
+      );
       return;
     }
 
@@ -111,12 +132,15 @@ function ActionItem({ product }) {
   };
 
   // ======================================================
-  // STRIPE CHECKOUT
+  // CREATE ORDER + STRIPE CHECKOUT
   // ======================================================
 
   const proceedToCheckout = async () => {
     try {
-      // Check login
+      // --------------------------------------------------
+      // CHECK LOGIN
+      // --------------------------------------------------
+
       if (!account?._id) {
         alert(
           "Please login before making a payment."
@@ -124,19 +148,25 @@ function ActionItem({ product }) {
         return;
       }
 
-      // Product price
+      // --------------------------------------------------
+      // PRODUCT PRICE
+      // --------------------------------------------------
+
       const price = Number(
         product?.price?.cost || 0
       );
 
       if (price <= 0) {
-        console.error(
-          "Invalid product price"
+        alert(
+          "Invalid product price."
         );
         return;
       }
 
-      // Product information for order
+      // --------------------------------------------------
+      // PRODUCT DATA
+      // --------------------------------------------------
+
       const products = [
         {
           productId: product.id,
@@ -153,7 +183,7 @@ function ActionItem({ product }) {
 
           quantity: 1,
 
-          price: price,
+          price,
 
           mrp: Number(
             product?.price?.mrp || 0
@@ -161,79 +191,129 @@ function ActionItem({ product }) {
         },
       ];
 
-      // Complete checkout data
+      // --------------------------------------------------
+      // STEP 1:
+      // CREATE ORDER IN MONGODB
+      // --------------------------------------------------
+
       const orderData = {
         userId: account._id,
 
         products,
 
         totalAmount: price,
+
+        paymentStatus: "Pending",
+
+        orderStatus: "Processing",
       };
 
       console.log(
-        "================================"
-      );
-
-      console.log(
-        "BUY NOW ORDER DATA:",
+        "Creating MongoDB order:",
         orderData
       );
 
-      console.log(
-        "User ID:",
-        account._id
-      );
-
-      console.log(
-        "Product:",
-        products
-      );
-
-      console.log(
-        "Total:",
-        price
-      );
-
-      console.log(
-        "================================"
-      );
-
-      // Create Stripe checkout session
-      const session =
-        await createCheckoutSession(
+      const orderResponse =
+        await createOrder(
           orderData
         );
 
       console.log(
-        "Stripe Session:",
-        session
+        "Order response:",
+        orderResponse
       );
 
-      if (!session?.id) {
+      // --------------------------------------------------
+      // GET ORDER ID
+      // --------------------------------------------------
+
+      const orderId =
+        orderResponse?.order?.orderId;
+
+      if (!orderId) {
         console.error(
-          "Stripe session ID is missing"
+          "Order ID missing from response."
         );
 
         alert(
-          "Unable to create payment session."
+          "Unable to create order."
         );
 
         return;
       }
 
-      // Load Stripe
+      console.log(
+        "Order created:",
+        orderId
+      );
+
+      // --------------------------------------------------
+      // STEP 2:
+      // CREATE STRIPE SESSION
+      // --------------------------------------------------
+
+      const checkoutData = {
+        userId: account._id,
+
+        products,
+
+        totalAmount: price,
+
+        orderId,
+      };
+
+      console.log(
+        "Creating Stripe session:",
+        checkoutData
+      );
+
+      const session =
+        await createCheckoutSession(
+          checkoutData
+        );
+
+      console.log(
+        "Stripe session:",
+        session
+      );
+
+      // --------------------------------------------------
+      // CHECK STRIPE SESSION
+      // --------------------------------------------------
+
+      if (!session?.id) {
+        console.error(
+          "Stripe session ID missing."
+        );
+
+        alert(
+          "Order was created, but payment session could not be created."
+        );
+
+        return;
+      }
+
+      // --------------------------------------------------
+      // STEP 3:
+      // LOAD STRIPE
+      // --------------------------------------------------
+
       const stripe =
         await stripePromise;
 
       if (!stripe) {
         console.error(
-          "Stripe failed to load"
+          "Stripe failed to load."
         );
 
         return;
       }
 
-      // Redirect to Stripe
+      // --------------------------------------------------
+      // STEP 4:
+      // REDIRECT TO STRIPE
+      // --------------------------------------------------
+
       const result =
         await stripe.redirectToCheckout({
           sessionId: session.id,
@@ -248,7 +328,7 @@ function ActionItem({ product }) {
 
     } catch (error) {
       console.error(
-        "Checkout Error:",
+        "BUY NOW Checkout Error:",
         error
       );
 
@@ -270,26 +350,31 @@ function ActionItem({ product }) {
   // AFTER LOGIN
   // ======================================================
 
-  const handleLoginSuccess = async () => {
-    setLoginOpen(false);
+  const handleLoginSuccess =
+    async () => {
+      setLoginOpen(false);
 
-    if (pendingAction === "cart") {
-      dispatch(
-        addToCart(
-          product.id,
-          quantity
-        )
-      );
+      if (
+        pendingAction === "cart"
+      ) {
+        dispatch(
+          addToCart(
+            product.id,
+            quantity
+          )
+        );
 
-      navigate("/cart");
-    }
+        navigate("/cart");
+      }
 
-    if (pendingAction === "buy") {
-      await proceedToCheckout();
-    }
+      if (
+        pendingAction === "buy"
+      ) {
+        await proceedToCheckout();
+      }
 
-    setPendingAction(null);
-  };
+      setPendingAction(null);
+    };
 
   // ======================================================
   // UI
@@ -308,7 +393,8 @@ function ActionItem({ product }) {
               product?.url
             }
             alt={
-              product?.title?.shortTitle ||
+              product?.title
+                ?.shortTitle ||
               "Product"
             }
           />
@@ -323,13 +409,17 @@ function ActionItem({ product }) {
           <StyledButton
             variant="contained"
             sx={{
-              background: "#fa9c04",
+              background:
+                "#fa9c04",
 
               "&:hover": {
-                background: "#e88b00",
+                background:
+                  "#e88b00",
               },
             }}
-            onClick={handleAddToCart}
+            onClick={
+              handleAddToCart
+            }
           >
             <AddShoppingCartIcon
               sx={{ mr: 1 }}
@@ -342,12 +432,16 @@ function ActionItem({ product }) {
 
           <StyledButton
             variant="contained"
-            onClick={handleBuyNow}
+            onClick={
+              handleBuyNow
+            }
             sx={{
-              background: "#19d65b",
+              background:
+                "#19d65b",
 
               "&:hover": {
-                background: "#12bd4e",
+                background:
+                  "#12bd4e",
               },
             }}
           >
@@ -359,7 +453,6 @@ function ActionItem({ product }) {
           </StyledButton>
 
         </ButtonWrapper>
-
       </LeftContainer>
 
       {/* LOGIN DIALOG */}
@@ -367,7 +460,9 @@ function ActionItem({ product }) {
       <LoginDialog
         open={loginOpen}
         setOpen={setLoginOpen}
-        onSuccess={handleLoginSuccess}
+        onSuccess={
+          handleLoginSuccess
+        }
       />
     </>
   );
